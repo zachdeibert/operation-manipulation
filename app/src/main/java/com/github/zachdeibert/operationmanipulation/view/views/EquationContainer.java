@@ -87,6 +87,20 @@ public class EquationContainer extends ViewGroup implements View.OnDragListener 
         view.setEquation(equation);
     }
 
+    private void check() {
+        Equation eq = getEquation();
+        Log.i("EquationContainer", eq.toString());
+        if (EquationSolver.isComplete(eq)) {
+            if (EquationSolver.isCorrect(eq)) {
+                this.view.setBackgroundColor(0xFF00FF00);
+            } else {
+                this.view.setBackgroundColor(0xFFFF0000);
+            }
+        } else {
+            this.view.setBackgroundColor(0xFFFFFFFF);
+        }
+    }
+
     public void addOperator(OperatorView view, PointF center) {
         addView(view);
         operators.put(view, center);
@@ -105,10 +119,7 @@ public class EquationContainer extends ViewGroup implements View.OnDragListener 
         } else {
             eq.insertOperatorAfter(operands.get(section - 1), view.getOperator());
         }
-        Log.i("EquationContainer", eq.toString());
-        if (EquationSolver.isCorrect(eq)) {
-            this.view.setBackgroundColor(0xFF00FF00);
-        }
+        check();
     }
 
     public void addOperator(OperatorView view, Rect rect) {
@@ -120,6 +131,7 @@ public class EquationContainer extends ViewGroup implements View.OnDragListener 
         operators.remove(view);
         removeView(view);
         getEquation().removeOperator(view.getOperator());
+        check();
     }
 
     @Override

@@ -32,6 +32,10 @@ public class EquationSolver {
         return value;
     }
 
+    public static boolean isComplete(Equation equation) {
+        return !Double.isNaN(solve(equation.getLeftSide()));
+    }
+
     public static boolean isCorrect(Equation equation) {
         double left = solve(equation.getLeftSide());
         double right = equation.getRightSide().getValue();
