@@ -30,6 +30,6 @@ public class FactorialOperator extends UnaryOperator {
     }
 
     public FactorialOperator() {
-        super(2);
+        super(3);
     }
 }
