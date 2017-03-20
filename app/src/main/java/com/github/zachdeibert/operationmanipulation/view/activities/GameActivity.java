@@ -2,6 +2,8 @@ package com.github.zachdeibert.operationmanipulation.view.activities;
 
 import android.os.Bundle;
 import android.app.Activity;
+import android.util.DisplayMetrics;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.github.zachdeibert.operationmanipulation.*;
@@ -22,8 +24,10 @@ public class GameActivity extends Activity {
     private OperationListView operationList;
     private GameSession session;
     private TextView scoreLabel;
+    private ScrollView equationContainer;
     private int solvedCorrectly;
     private int solvedIncorrectly;
+    private boolean loading;
 
     public EquationGenerator getGenerator() {
         return generator;
@@ -47,35 +51,41 @@ public class GameActivity extends Activity {
     }
 
     public void onSolvedEquation() {
-        session.addScore(session.getLevel().getEquationSolvingScore());
-        scoreLabel.setText(String.format("Score: %d", session.getScore()));
-        ++solvedCorrectly;
-        if (session.getScore() >= session.getLevel().getMinimumAdvancePoints() && ((float) solvedCorrectly) / (float) (solvedCorrectly + solvedIncorrectly) >= session.getLevel().getMinimumAdvanceAccuracy()) {
-            session.setLevel(Level.values()[session.getLevel().ordinal() + 1]);
-            loadLevel(session.getLevel());
-            solvedCorrectly = 0;
-            solvedIncorrectly = 0;
-            List<EquationContainer> unsolved = new ArrayList<>();
-            for (int i = 0; i < equationList.getChildCount(); ++i) {
-                EquationContainer equation = (EquationContainer) equationList.getChildAt(i);
-                if (!equation.isSolved()) {
-                    unsolved.add(equation);
+        if (!loading) {
+            session.addScore(session.getLevel().getEquationSolvingScore());
+            scoreLabel.setText(String.format("Score: %d", session.getScore()));
+            ++solvedCorrectly;
+            if (session.getScore() >= session.getLevel().getMinimumAdvancePoints() && ((float) solvedCorrectly) / (float) (solvedCorrectly + solvedIncorrectly) >= session.getLevel().getMinimumAdvanceAccuracy()) {
+                session.setLevel(Level.values()[session.getLevel().ordinal() + 1]);
+                loadLevel(session.getLevel());
+                solvedCorrectly = 0;
+                solvedIncorrectly = 0;
+                List<EquationContainer> unsolved = new ArrayList<>();
+                for (int i = 0; i < equationList.getChildCount(); ++i) {
+                    EquationContainer equation = (EquationContainer) equationList.getChildAt(i);
+                    if (!equation.isSolved()) {
+                        unsolved.add(equation);
+                    }
                 }
-            }
-            for (EquationContainer equation : unsolved) {
-                equationList.removeView(equation);
-            }
-            for (int i = 0; i < session.getLevel().getMaximumUnsolvedPuzzles(); ++i) {
+                for (EquationContainer equation : unsolved) {
+                    equationList.removeView(equation);
+                }
+                for (int i = 0; i < session.getLevel().getMaximumUnsolvedPuzzles(); ++i) {
+                    addEquation();
+                }
+            } else {
                 addEquation();
             }
-
-        } else {
-            addEquation();
+            DisplayMetrics metrics = new DisplayMetrics();
+            getWindowManager().getDefaultDisplay().getMetrics(metrics);
+            equationContainer.smoothScrollBy(0, metrics.heightPixels / 4);
         }
     }
 
     public void onFailedSolution() {
-        ++solvedIncorrectly;
+        if (!loading) {
+            ++solvedIncorrectly;
+        }
     }
 
     @Override
@@ -94,9 +104,11 @@ public class GameActivity extends Activity {
             }
             solvedCorrectly = 0;
             solvedIncorrectly = 0;
-        } else {
-            super.onRestoreInstanceState(savedInstanceState);
+        } else if (session == null) {
             session = savedInstanceState.getParcelable("GameSession");
+            loading = true;
+            super.onRestoreInstanceState(savedInstanceState);
+            loading = false;
             loadLevel(session.getLevel());
             solvedCorrectly = savedInstanceState.getInt("SolvedCorrectly");
             solvedIncorrectly = savedInstanceState.getInt("SolvedIncorrectly");
@@ -111,6 +123,7 @@ public class GameActivity extends Activity {
         equationList = (EquationListLayout) findViewById(R.id.equationList);
         operationList = (OperationListView) findViewById(R.id.operationList);
         scoreLabel = (TextView) findViewById(R.id.scoreView);
+        equationContainer = (ScrollView) findViewById(R.id.equationContainer);
         setGenerator(new EquationGenerator());
         onRestoreInstanceState(savedInstanceState);
     }
