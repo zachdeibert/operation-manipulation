@@ -102,11 +102,6 @@ public class EquationContainer extends ViewGroup implements View.OnDragListener 
     }
 
     public void addOperator(OperatorView view, PointF center) {
-        view.makeUnique();
-        addView(view);
-        operators.put(view, center);
-        invalidate();
-        view.setVisibility(VISIBLE);
         Equation eq = getEquation();
         List<Operand> operands = new ArrayList<>();
         for (ExpressionItem item : eq.getLeftSide()) {
@@ -117,9 +112,15 @@ public class EquationContainer extends ViewGroup implements View.OnDragListener 
         int section = (int) ((center.x * 2 * (2 + eq.getOperandCount()) + 1) / 2);
         if (section == 0) {
             eq.insertOperatorBefore(operands.get(0), view.getOperator());
-        } else {
+        } else if (section <= eq.getOperandCount()) {
             eq.insertOperatorAfter(operands.get(section - 1), view.getOperator());
+        } else {
+            return;
         }
+        view.makeUnique();
+        operators.put(view, center);
+        addView(view);
+        view.setVisibility(VISIBLE);
         check();
     }
 
