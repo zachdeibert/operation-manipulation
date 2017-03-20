@@ -11,7 +11,7 @@ import android.view.View;
 import com.github.zachdeibert.operationmanipulation.model.*;
 
 public class EquationView extends View {
-    private static class SavedState extends BaseSavedState {
+    static class SavedState extends BaseSavedState {
         public static final Creator<SavedState> CREATOR = new Creator<SavedState>() {
             @Override
             public SavedState createFromParcel(Parcel source) {

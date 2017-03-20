@@ -11,7 +11,6 @@ public class OperationListView extends LinearLayout {
     private void init(AttributeSet attrs, int defStyleAttr) {
         for (Operator op : Operator.VALUES) {
             OperatorView view = new OperatorView(getContext(), null, R.attr.operatorBtnStyle);
-            view.setText(op.toString());
             view.setOperator(op);
             addView(view);
         }

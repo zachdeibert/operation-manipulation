@@ -26,30 +26,25 @@ public class OperatorView extends Button implements View.OnTouchListener {
             }
         };
 
-        private final String text;
         private final Operator operator;
 
         private void apply(OperatorView view) {
-            view.setText(text);
             view.setOperator(operator);
         }
 
         @Override
         public void writeToParcel(Parcel out, int flags) {
             super.writeToParcel(out, flags);
-            out.writeString(text);
             out.writeInt(OperatorType.valueOf(operator).ordinal());
         }
 
         private SavedState(Parcelable state, OperatorView view) {
             super(state);
-            text = view.getText().toString();
             operator = view.getOperator();
         }
 
         private SavedState(Parcel parcel) {
             super(parcel);
-            text = parcel.readString();
             operator = OperatorType.values()[parcel.readInt()].getOperator();
         }
     }
@@ -62,6 +57,7 @@ public class OperatorView extends Button implements View.OnTouchListener {
 
     public void setOperator(Operator operator) {
         this.operator = operator;
+        setText(operator.toString());
     }
 
     @Override

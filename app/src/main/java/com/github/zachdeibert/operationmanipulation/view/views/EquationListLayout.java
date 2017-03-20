@@ -8,8 +8,6 @@ import android.util.SparseArray;
 import android.view.View;
 import android.widget.LinearLayout;
 
-import com.github.zachdeibert.operationmanipulation.model.Equation;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,12 +25,12 @@ public class EquationListLayout extends LinearLayout {
             }
         };
 
-        private final List<Equation> equations;
+        private final List<EquationContainer.SavedState> states;
 
         private void apply(EquationListLayout view) {
-            for (Equation equation : equations) {
+            for (EquationContainer.SavedState state : states) {
                 EquationContainer equationView = new EquationContainer(view.getContext());
-                equationView.setEquation(equation);
+                equationView.onRestoreInstanceState(state);
                 view.addView(equationView);
             }
         }
@@ -40,23 +38,23 @@ public class EquationListLayout extends LinearLayout {
         @Override
         public void writeToParcel(Parcel out, int flags) {
             super.writeToParcel(out, flags);
-            out.writeList(equations);
+            out.writeList(states);
         }
 
         private SavedState(Parcelable state, EquationListLayout view) {
             super(state);
-            equations = new ArrayList<>();
+            states = new ArrayList<>();
             for (int i = 0; i < view.getChildCount(); ++i) {
                 View v = view.getChildAt(i);
                 if (v instanceof EquationContainer) {
-                    equations.add(((EquationContainer) v).getEquation());
+                    states.add((EquationContainer.SavedState) ((EquationContainer) v).onSaveInstanceState());
                 }
             }
         }
 
         private SavedState(Parcel parcel) {
             super(parcel);
-            equations = parcel.readArrayList(ClassLoader.getSystemClassLoader());
+            states = parcel.readArrayList(ClassLoader.getSystemClassLoader());
         }
     }
 
