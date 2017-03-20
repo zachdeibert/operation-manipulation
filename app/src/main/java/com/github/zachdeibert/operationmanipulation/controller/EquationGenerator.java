@@ -7,6 +7,7 @@ import com.github.zachdeibert.operationmanipulation.model.Equation;
 import com.github.zachdeibert.operationmanipulation.model.ExpressionItem;
 import com.github.zachdeibert.operationmanipulation.model.Operand;
 import com.github.zachdeibert.operationmanipulation.model.OperatorType;
+import com.github.zachdeibert.operationmanipulation.model.UnaryOperator;
 
 import java.util.Random;
 
@@ -15,14 +16,20 @@ public class EquationGenerator {
     private int operands;
     private OperatorType[] operators;
 
-    private boolean solve(Equation eq, BinaryOperator[] ops) {
-        if (eq.getOperandCount() == ops.length + 1) {
+    private boolean solve(Equation eq, BinaryOperator[] binaryOperators, UnaryOperator[] unaryOperators) {
+        if (eq.getOperandCount() == binaryOperators.length + 1) {
             eq.clear();
             int i = 0;
             for (ExpressionItem item : eq.getLeftSide()) {
                 if (item instanceof Operand) {
-                    eq.insertOperatorAfter(item, ops[i++]);
-                    if (i >= ops.length) {
+                    ExpressionItem op = item;
+                    if (unaryOperators[i] != null) {
+                        unaryOperators[i] = (UnaryOperator) unaryOperators[i].clone();
+                        eq.insertOperatorAfter(op, unaryOperators[i]);
+                        op = unaryOperators[i];
+                    }
+                    eq.insertOperatorAfter(op, binaryOperators[i++]);
+                    if (i >= binaryOperators.length) {
                         break;
                     }
                 }
@@ -34,12 +41,12 @@ public class EquationGenerator {
                 return false;
             }
         } else {
-            BinaryOperator[] subs = new BinaryOperator[ops.length + 1];
-            System.arraycopy(ops, 0, subs, 0, ops.length);
+            BinaryOperator[] subs = new BinaryOperator[binaryOperators.length + 1];
+            System.arraycopy(binaryOperators, 0, subs, 0, binaryOperators.length);
             for (OperatorType op : getOperators()) {
                 if (op.getOperator() instanceof BinaryOperator) {
-                    subs[ops.length] = (BinaryOperator) op.getOperator();
-                    if (solve(eq, subs)) {
+                    subs[binaryOperators.length] = (BinaryOperator) op.getOperator();
+                    if (solve(eq, subs, unaryOperators)) {
                         return true;
                     }
                 }
@@ -48,9 +55,31 @@ public class EquationGenerator {
         }
     }
 
+    private boolean solve(Equation eq, UnaryOperator[] unaryOperators) {
+        if (eq.getOperandCount() == unaryOperators.length) {
+            return solve(eq, new BinaryOperator[0], unaryOperators);
+        } else {
+            UnaryOperator[] subs = new UnaryOperator[unaryOperators.length + 1];
+            System.arraycopy(unaryOperators, 0, subs, 0, unaryOperators.length);
+            subs[unaryOperators.length] = null;
+            if (solve(eq, subs)) {
+                return true;
+            }
+            for (OperatorType op : getOperators()) {
+                if (op.getOperator() instanceof UnaryOperator) {
+                    subs[unaryOperators.length] = (UnaryOperator) op.getOperator();
+                    if (solve(eq, subs)) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
     public boolean solve(Equation eq) {
         try {
-            return solve(eq, new BinaryOperator[0]);
+            return solve(eq, new UnaryOperator[0]);
         } finally {
             eq.clear();
         }
