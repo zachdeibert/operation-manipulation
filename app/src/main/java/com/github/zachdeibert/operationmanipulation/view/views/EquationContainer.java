@@ -126,14 +126,34 @@ public class EquationContainer extends ViewGroup implements View.OnDragListener 
                 operands.add((Operand) item);
             }
         }
-        view.makeUnique();
-        int section = (int) ((center.x * 2 * (2 + eq.getOperandCount()) + 1) / 2);
-        if (section == 0) {
-            eq.insertOperatorBefore(operands.get(0), view.getOperator());
-        } else if (section <= eq.getOperandCount()) {
-            eq.insertOperatorAfter(operands.get(section - 1), view.getOperator());
-        } else {
+        if ((center.x * 2 * (2 + eq.getOperandCount()) + 1) / 2 > eq.getOperandCount() + 1) {
             return;
+        }
+        view.makeUnique();
+        Map<Float, ExpressionItem> expression = new HashMap<>();
+        int i = 0;
+        float charWidth = 1f / (2 + eq.getOperandCount());
+        for (ExpressionItem item : eq.getLeftSide()) {
+            if (item instanceof Operand) {
+                expression.put(charWidth * (i++ + 0.5f), item);
+            }
+        }
+        for (View v : operators.keySet()) {
+            expression.put(operators.get(v).x, ((OperatorView) v).getOperator());
+        }
+        ExpressionItem closestItem = null;
+        float closestDistance = Float.MAX_VALUE;
+        for (Float position : expression.keySet()) {
+            float distance = center.x - position;
+            if (distance > 0 && distance < closestDistance) {
+                closestItem = expression.get(position);
+                closestDistance = distance;
+            }
+        }
+        if (closestItem == null) {
+            eq.insertOperatorBefore(eq.getLeftSide()[0], view.getOperator());
+        } else {
+            eq.insertOperatorAfter(closestItem, view.getOperator());
         }
         operators.put(view, center);
         addView(view);
