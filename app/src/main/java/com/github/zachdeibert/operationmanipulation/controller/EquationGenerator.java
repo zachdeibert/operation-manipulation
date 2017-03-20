@@ -6,12 +6,14 @@ import com.github.zachdeibert.operationmanipulation.model.Equation;
 import com.github.zachdeibert.operationmanipulation.model.ExpressionItem;
 import com.github.zachdeibert.operationmanipulation.model.Operand;
 import com.github.zachdeibert.operationmanipulation.model.Operator;
+import com.github.zachdeibert.operationmanipulation.model.OperatorType;
 
 import java.util.Random;
 
 public class EquationGenerator {
     private final Random random;
     private int operands;
+    private OperatorType[] operators;
 
     private boolean solve(Equation eq, Operator[] ops) {
         if (eq.getOperandCount() == ops.length + 1) {
@@ -34,8 +36,8 @@ public class EquationGenerator {
         } else {
             Operator[] subs = new Operator[ops.length + 1];
             System.arraycopy(ops, 0, subs, 0, ops.length);
-            for (Operator op : Operator.VALUES) {
-                subs[ops.length] = op;
+            for (OperatorType op : getOperators()) {
+                subs[ops.length] = op.getOperator();
                 if (solve(eq, subs)) {
                     return true;
                 }
@@ -78,8 +80,17 @@ public class EquationGenerator {
         this.operands = operands;
     }
 
+    public OperatorType[] getOperators() {
+        return operators;
+    }
+
+    public void setOperators(OperatorType... operators) {
+        this.operators = operators;
+    }
+
     public EquationGenerator() {
         random = new Random();
         setOperands(3);
+        setOperators(OperatorType.values());
     }
 }

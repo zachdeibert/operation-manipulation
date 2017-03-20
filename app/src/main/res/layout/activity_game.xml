@@ -28,7 +28,8 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:orientation="horizontal"
-            android:weightSum="1">
+            android:weightSum="1"
+            android:id="@+id/operationList">
         </com.github.zachdeibert.operationmanipulation.view.views.OperationListView>
     </com.github.zachdeibert.operationmanipulation.view.views.OperationScrollView>
 </RelativeLayout>
