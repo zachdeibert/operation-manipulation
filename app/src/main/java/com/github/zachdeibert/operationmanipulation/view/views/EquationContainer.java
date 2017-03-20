@@ -18,6 +18,7 @@ import com.github.zachdeibert.operationmanipulation.model.Equation;
 import com.github.zachdeibert.operationmanipulation.model.ExpressionItem;
 import com.github.zachdeibert.operationmanipulation.model.Operand;
 import com.github.zachdeibert.operationmanipulation.model.Operator;
+import com.github.zachdeibert.operationmanipulation.view.activities.GameActivity;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -103,6 +104,7 @@ public class EquationContainer extends ViewGroup implements View.OnDragListener 
                         }
                     });
                 }
+                ((GameActivity) getContext()).onSolvedEquation();
             } else {
                 this.view.setBackgroundColor(0xFFFF0000);
             }

@@ -5,17 +5,25 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.github.zachdeibert.operationmanipulation.view.activities.GameActivity">
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/scoreView"
+        android:textAlignment="center"
+        android:textSize="24sp" />
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_centerHorizontal="true"
         android:id="@+id/equationContainer"
-        android:layout_above="@+id/operationDrawer">
+        android:layout_above="@+id/operationDrawer"
+        android:layout_below="@+id/scoreView">
         <com.github.zachdeibert.operationmanipulation.view.views.EquationListLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:id="@+id/equationList" />
+            android:id="@+id/equationList">
+        </com.github.zachdeibert.operationmanipulation.view.views.EquationListLayout>
     </ScrollView>
     <com.github.zachdeibert.operationmanipulation.view.views.OperationScrollView
         android:layout_width="match_parent"
