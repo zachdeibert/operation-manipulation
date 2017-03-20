@@ -28,5 +28,6 @@ public class MultiplicationOperator extends Operator {
     }
 
     public MultiplicationOperator() {
+        super(1);
     }
 }

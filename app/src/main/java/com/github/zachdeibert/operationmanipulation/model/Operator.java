@@ -24,6 +24,12 @@ public abstract class Operator extends ExpressionItem implements Cloneable {
         EXPONENT
     };
 
+    private final int order;
+
+    public int getOrder() {
+        return order;
+    }
+
     @Override
     public Operator clone() {
         try {
@@ -44,4 +50,8 @@ public abstract class Operator extends ExpressionItem implements Cloneable {
     }
 
     public abstract double run(double lhs, double rhs);
+
+    protected Operator(int order) {
+        this.order = order;
+    }
 }

@@ -28,5 +28,6 @@ public class SubtractionOperator extends Operator {
     }
 
     public SubtractionOperator() {
+        super(0);
     }
 }

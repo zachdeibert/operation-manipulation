@@ -28,5 +28,6 @@ public class AdditionOperator extends Operator {
     }
 
     public AdditionOperator() {
+        super(0);
     }
 }

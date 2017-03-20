@@ -28,5 +28,6 @@ public class ExponentOperator extends Operator {
     }
 
     public ExponentOperator() {
+        super(2);
     }
 }

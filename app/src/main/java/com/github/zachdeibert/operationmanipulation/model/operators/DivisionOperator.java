@@ -28,5 +28,6 @@ public class DivisionOperator extends Operator {
     }
 
     public DivisionOperator() {
+        super(1);
     }
 }
