@@ -29,6 +29,10 @@ public class EquationSolver {
                 }
             }
         }
+        if (op != null) {
+            Log.d("EquationSolver", "Extra operator at end");
+            return Double.NaN;
+        }
         return value;
     }
 

@@ -109,6 +109,7 @@ public class EquationContainer extends ViewGroup implements View.OnDragListener 
                 operands.add((Operand) item);
             }
         }
+        view.makeUnique();
         int section = (int) ((center.x * 2 * (2 + eq.getOperandCount()) + 1) / 2);
         if (section == 0) {
             eq.insertOperatorBefore(operands.get(0), view.getOperator());
@@ -117,7 +118,6 @@ public class EquationContainer extends ViewGroup implements View.OnDragListener 
         } else {
             return;
         }
-        view.makeUnique();
         operators.put(view, center);
         addView(view);
         view.setVisibility(VISIBLE);
