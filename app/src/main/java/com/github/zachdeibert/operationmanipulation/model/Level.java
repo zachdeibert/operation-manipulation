@@ -6,7 +6,8 @@ public enum Level {
     Level3(2, 8, 4, 100, 0.8f, OperatorType.MULTIPLICATION, OperatorType.DIVISION),
     Level4(3, 8, 8, 200, 0.85f, OperatorType.ADDITION, OperatorType.SUBTRACTION, OperatorType.MULTIPLICATION, OperatorType.DIVISION),
     Level5(3, 6, 16, 500, 0.9f, OperatorType.ADDITION, OperatorType.SUBTRACTION, OperatorType.MULTIPLICATION, OperatorType.DIVISION, OperatorType.EXPONENT),
-    Level6(4, 4, 32, 1000, 2, OperatorType.ADDITION, OperatorType.SUBTRACTION, OperatorType.MULTIPLICATION, OperatorType.DIVISION, OperatorType.EXPONENT);
+    Level6(3, 6, 32, 1000, 0.9f, OperatorType.ADDITION, OperatorType.SUBTRACTION, OperatorType.MULTIPLICATION, OperatorType.DIVISION, OperatorType.EXPONENT, OperatorType.FACTORIAL),
+    Level7(4, 4, 64, 2000, 2, OperatorType.ADDITION, OperatorType.SUBTRACTION, OperatorType.MULTIPLICATION, OperatorType.DIVISION, OperatorType.EXPONENT, OperatorType.FACTORIAL);
 
     private final int numOperands;
     private final int unsolvedAmount;

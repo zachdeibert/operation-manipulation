@@ -7,7 +7,8 @@ public enum OperatorType {
     SUBTRACTION(Operator.SUBTRACTION),
     MULTIPLICATION(Operator.MULTIPLICATION),
     DIVISION(Operator.DIVISION),
-    EXPONENT(Operator.EXPONENT);
+    EXPONENT(Operator.EXPONENT),
+    FACTORIAL(Operator.FACTORIAL);
 
     private final Operator operator;
 

@@ -37,9 +37,11 @@ public class EquationGenerator {
             BinaryOperator[] subs = new BinaryOperator[ops.length + 1];
             System.arraycopy(ops, 0, subs, 0, ops.length);
             for (OperatorType op : getOperators()) {
-                subs[ops.length] = (BinaryOperator) op.getOperator();
-                if (solve(eq, subs)) {
-                    return true;
+                if (op.getOperator() instanceof BinaryOperator) {
+                    subs[ops.length] = (BinaryOperator) op.getOperator();
+                    if (solve(eq, subs)) {
+                        return true;
+                    }
                 }
             }
             return false;
