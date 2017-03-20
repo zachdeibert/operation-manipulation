@@ -1,16 +1,18 @@
 package com.github.zachdeibert.operationmanipulation.model;
 
 public enum Level {
-    Level1(2, 10, 1, OperatorType.ADDITION, OperatorType.SUBTRACTION),
-    Level2(3, 10, 2, OperatorType.ADDITION, OperatorType.SUBTRACTION),
-    Level3(2, 8, 4, OperatorType.MULTIPLICATION, OperatorType.DIVISION),
-    Level4(3, 8, 8, OperatorType.ADDITION, OperatorType.SUBTRACTION, OperatorType.MULTIPLICATION, OperatorType.DIVISION),
-    Level5(3, 6, 16, OperatorType.ADDITION, OperatorType.SUBTRACTION, OperatorType.MULTIPLICATION, OperatorType.DIVISION, OperatorType.EXPONENT),
-    Level6(4, 4, 32, OperatorType.ADDITION, OperatorType.SUBTRACTION, OperatorType.MULTIPLICATION, OperatorType.DIVISION, OperatorType.EXPONENT);
+    Level1(2, 10, 1, 10, 0.6f, OperatorType.ADDITION, OperatorType.SUBTRACTION),
+    Level2(3, 10, 2, 25, 0.7f, OperatorType.ADDITION, OperatorType.SUBTRACTION),
+    Level3(2, 8, 4, 100, 0.8f, OperatorType.MULTIPLICATION, OperatorType.DIVISION),
+    Level4(3, 8, 8, 200, 0.85f, OperatorType.ADDITION, OperatorType.SUBTRACTION, OperatorType.MULTIPLICATION, OperatorType.DIVISION),
+    Level5(3, 6, 16, 500, 0.9f, OperatorType.ADDITION, OperatorType.SUBTRACTION, OperatorType.MULTIPLICATION, OperatorType.DIVISION, OperatorType.EXPONENT),
+    Level6(4, 4, 32, 1000, 2, OperatorType.ADDITION, OperatorType.SUBTRACTION, OperatorType.MULTIPLICATION, OperatorType.DIVISION, OperatorType.EXPONENT);
 
     private final int numOperands;
     private final int unsolvedAmount;
     private final int equationScore;
+    private final int minimumAdvancePoints;
+    private final float minimumAdvanceAccuracy;
     private final OperatorType[] operators;
 
     public int getNumberOfOperands() {
@@ -25,14 +27,24 @@ public enum Level {
         return equationScore;
     }
 
+    public int getMinimumAdvancePoints() {
+        return minimumAdvancePoints;
+    }
+
+    public float getMinimumAdvanceAccuracy() {
+        return minimumAdvanceAccuracy;
+    }
+
     public OperatorType[] getAllowedOperators() {
         return operators;
     }
 
-    Level(int numOperands, int unsolvedAmount, int equationScore, OperatorType... operators) {
+    Level(int numOperands, int unsolvedAmount, int equationScore, int minimumAdvancePoints, float minimumAdvanceAccuracy, OperatorType... operators) {
         this.numOperands = numOperands;
         this.unsolvedAmount = unsolvedAmount;
         this.equationScore = equationScore;
+        this.minimumAdvancePoints = minimumAdvancePoints;
+        this.minimumAdvanceAccuracy = minimumAdvanceAccuracy;
         this.operators = operators;
     }
 }

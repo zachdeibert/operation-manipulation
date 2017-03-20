@@ -107,10 +107,15 @@ public class EquationContainer extends ViewGroup implements View.OnDragListener 
                 ((GameActivity) getContext()).onSolvedEquation();
             } else {
                 this.view.setBackgroundColor(0xFFFF0000);
+                ((GameActivity) getContext()).onFailedSolution();
             }
         } else {
             this.view.setBackgroundColor(0xFFFFFFFF);
         }
+    }
+
+    public boolean isSolved() {
+        return this.view.getBackgroundColor() == 0xFF00FF00;
     }
 
     public void addOperator(OperatorView view, PointF center) {
