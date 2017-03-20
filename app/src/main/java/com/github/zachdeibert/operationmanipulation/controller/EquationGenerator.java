@@ -2,10 +2,10 @@ package com.github.zachdeibert.operationmanipulation.controller;
 
 import android.util.Log;
 
+import com.github.zachdeibert.operationmanipulation.model.BinaryOperator;
 import com.github.zachdeibert.operationmanipulation.model.Equation;
 import com.github.zachdeibert.operationmanipulation.model.ExpressionItem;
 import com.github.zachdeibert.operationmanipulation.model.Operand;
-import com.github.zachdeibert.operationmanipulation.model.Operator;
 import com.github.zachdeibert.operationmanipulation.model.OperatorType;
 
 import java.util.Random;
@@ -15,7 +15,7 @@ public class EquationGenerator {
     private int operands;
     private OperatorType[] operators;
 
-    private boolean solve(Equation eq, Operator[] ops) {
+    private boolean solve(Equation eq, BinaryOperator[] ops) {
         if (eq.getOperandCount() == ops.length + 1) {
             eq.clear();
             int i = 0;
@@ -34,10 +34,10 @@ public class EquationGenerator {
                 return false;
             }
         } else {
-            Operator[] subs = new Operator[ops.length + 1];
+            BinaryOperator[] subs = new BinaryOperator[ops.length + 1];
             System.arraycopy(ops, 0, subs, 0, ops.length);
             for (OperatorType op : getOperators()) {
-                subs[ops.length] = op.getOperator();
+                subs[ops.length] = (BinaryOperator) op.getOperator();
                 if (solve(eq, subs)) {
                     return true;
                 }
@@ -48,7 +48,7 @@ public class EquationGenerator {
 
     public boolean solve(Equation eq) {
         try {
-            return solve(eq, new Operator[0]);
+            return solve(eq, new BinaryOperator[0]);
         } finally {
             eq.clear();
         }

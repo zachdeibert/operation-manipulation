@@ -2,9 +2,9 @@ package com.github.zachdeibert.operationmanipulation.model.operators;
 
 import android.os.Parcel;
 
-import com.github.zachdeibert.operationmanipulation.model.Operator;
+import com.github.zachdeibert.operationmanipulation.model.BinaryOperator;
 
-public class SubtractionOperator extends Operator {
+public class SubtractionOperator extends BinaryOperator {
     public static final Creator<SubtractionOperator> CREATOR = new Creator<SubtractionOperator>() {
         @Override
         public SubtractionOperator createFromParcel(Parcel source) {

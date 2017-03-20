@@ -2,6 +2,7 @@ package com.github.zachdeibert.operationmanipulation.controller;
 
 import android.util.Log;
 
+import com.github.zachdeibert.operationmanipulation.model.BinaryOperator;
 import com.github.zachdeibert.operationmanipulation.model.Equation;
 import com.github.zachdeibert.operationmanipulation.model.ExpressionItem;
 import com.github.zachdeibert.operationmanipulation.model.Operand;
@@ -14,10 +15,10 @@ public class EquationSolver {
     private static void solve(List<Object> expression, int order) {
         for (int i = 0; i < expression.size(); ++i) {
             Object item = expression.get(i);
-            if (item instanceof Operator && ((Operator) item).getOrder() == order) {
+            if (item instanceof BinaryOperator && ((BinaryOperator) item).getOrder() == order) {
                 double lhs = (double) expression.get(i - 1);
                 double rhs = (double) expression.get(i + 1);
-                double result = ((Operator) item).run(lhs, rhs);
+                double result = ((BinaryOperator) item).run(lhs, rhs);
                 expression.set(i - 1, result);
                 expression.remove(i);
                 expression.remove(i);
@@ -47,7 +48,7 @@ public class EquationSolver {
     public static boolean isComplete(Equation equation) {
         boolean wasOperator = true;
         for (ExpressionItem item : equation.getLeftSide()) {
-            if (item instanceof Operator) {
+            if (item instanceof BinaryOperator) {
                 if (wasOperator) {
                     Log.d("EquationSolver", "Multiple adjacent operators");
                     return false;

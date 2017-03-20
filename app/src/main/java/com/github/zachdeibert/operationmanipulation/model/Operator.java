@@ -26,6 +26,15 @@ public abstract class Operator extends ExpressionItem implements Cloneable {
 
     private final int order;
 
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+    }
+
     public int getOrder() {
         return order;
     }
@@ -39,17 +48,6 @@ public abstract class Operator extends ExpressionItem implements Cloneable {
             return this;
         }
     }
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-    }
-
-    public abstract double run(double lhs, double rhs);
 
     protected Operator(int order) {
         this.order = order;

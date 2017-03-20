@@ -2,9 +2,9 @@ package com.github.zachdeibert.operationmanipulation.model.operators;
 
 import android.os.Parcel;
 
-import com.github.zachdeibert.operationmanipulation.model.Operator;
+import com.github.zachdeibert.operationmanipulation.model.BinaryOperator;
 
-public class DivisionOperator extends Operator {
+public class DivisionOperator extends BinaryOperator {
     public static final Creator<DivisionOperator> CREATOR = new Creator<DivisionOperator>() {
         @Override
         public DivisionOperator createFromParcel(Parcel source) {
