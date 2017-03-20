@@ -8,6 +8,7 @@ import android.os.Parcelable;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.DragEvent;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -93,6 +94,15 @@ public class EquationContainer extends ViewGroup implements View.OnDragListener 
         if (EquationSolver.isComplete(eq)) {
             if (EquationSolver.isCorrect(eq)) {
                 this.view.setBackgroundColor(0xFF00FF00);
+                setOnDragListener(null);
+                for (int i = 0; i < getChildCount(); ++i) {
+                    getChildAt(i).setOnTouchListener(new OnTouchListener() {
+                        @Override
+                        public boolean onTouch(View v, MotionEvent event) {
+                            return true;
+                        }
+                    });
+                }
             } else {
                 this.view.setBackgroundColor(0xFFFF0000);
             }
