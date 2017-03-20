@@ -60,6 +60,10 @@ public class OperatorView extends Button implements View.OnTouchListener {
         setText(operator.toString());
     }
 
+    public void makeUnique() {
+        setOperator(getOperator().clone());
+    }
+
     @Override
     public Parcelable onSaveInstanceState() {
         return new SavedState(super.onSaveInstanceState(), this);

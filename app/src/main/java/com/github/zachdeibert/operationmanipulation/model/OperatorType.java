@@ -17,7 +17,7 @@ public enum OperatorType {
 
     public static OperatorType valueOf(Operator operator) {
         for (OperatorType type : values()) {
-            if (type.getOperator() == operator) {
+            if (type.getOperator().getClass() == operator.getClass()) {
                 return type;
             }
         }

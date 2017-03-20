@@ -102,6 +102,7 @@ public class EquationContainer extends ViewGroup implements View.OnDragListener 
     }
 
     public void addOperator(OperatorView view, PointF center) {
+        view.makeUnique();
         addView(view);
         operators.put(view, center);
         invalidate();
