@@ -10,7 +10,7 @@
     <declare-styleable name="AppTheme">
         <attr name="operatorBtnStyle" format="reference" />
     </declare-styleable>
-    <style name="OperatorBtn" parent="android:Widget.Holo.Button">
+    <style name="OperatorBtn" parent="android:Widget.DeviceDefault.Button">
         <item name="android:minWidth">48dip</item>
     </style>
 </resources>

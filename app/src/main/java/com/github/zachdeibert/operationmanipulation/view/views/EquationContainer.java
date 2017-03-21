@@ -1,16 +1,21 @@
 package com.github.zachdeibert.operationmanipulation.view.views;
 
 import android.content.Context;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.graphics.PointF;
 import android.graphics.Rect;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.util.TypedValue;
+import android.view.Choreographer;
 import android.view.DragEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.github.zachdeibert.operationmanipulation.R;
 import com.github.zachdeibert.operationmanipulation.controller.EquationSolver;
@@ -97,12 +102,17 @@ public class EquationContainer extends ViewGroup implements View.OnDragListener 
                 this.view.setBackgroundColor(0xFF00FF00);
                 setOnDragListener(null);
                 for (int i = 0; i < getChildCount(); ++i) {
-                    getChildAt(i).setOnTouchListener(new OnTouchListener() {
+                    final View view = getChildAt(i);
+                    view.setOnTouchListener(new OnTouchListener() {
                         @Override
                         public boolean onTouch(View v, MotionEvent event) {
                             return true;
                         }
                     });
+                    if (view instanceof TextView) {
+                        ((TextView) view).setTextColor(Color.BLACK);
+                        view.setBackgroundColor(Color.TRANSPARENT);
+                    }
                 }
                 ((GameActivity) getContext()).onSolvedEquation();
             } else {
