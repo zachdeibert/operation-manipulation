@@ -8,6 +8,8 @@ import android.util.SparseArray;
 import android.view.View;
 import android.widget.LinearLayout;
 
+import com.github.zachdeibert.operationmanipulation.view.activities.GameActivity;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,6 +35,7 @@ public class EquationListLayout extends LinearLayout {
                 equationView.onRestoreInstanceState(state);
                 view.addView(equationView);
             }
+            ((GameActivity) view.getContext()).arrangeAddEquationView();
         }
 
         @Override

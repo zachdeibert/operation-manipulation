@@ -49,13 +49,17 @@ public class GameActivity extends Activity {
         this.generator = generator;
     }
 
+    public void arrangeAddEquationView() {
+        equationList.removeView(addEquationView);
+        equationList.addView(addEquationView);
+    }
+
     public void addEquation() {
         Equation equation = getGenerator().generate();
         EquationContainer view = new EquationContainer(this);
         view.setEquation(equation);
-        equationList.removeView(addEquationView);
         equationList.addView(view);
-        equationList.addView(addEquationView);
+        arrangeAddEquationView();
     }
 
     public void loadLevel(Level level) {
