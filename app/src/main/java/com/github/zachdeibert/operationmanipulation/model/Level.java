@@ -5,8 +5,8 @@ public enum Level {
     Level2(3, 10, 2, 25, 0.7f, OperatorType.ADDITION, OperatorType.SUBTRACTION),
     Level3(2, 8, 4, 100, 0.8f, OperatorType.MULTIPLICATION, OperatorType.DIVISION),
     Level4(3, 8, 8, 200, 0.85f, OperatorType.ADDITION, OperatorType.SUBTRACTION, OperatorType.MULTIPLICATION, OperatorType.DIVISION),
-    Level5(3, 6, 16, 500, 0.9f, OperatorType.ADDITION, OperatorType.SUBTRACTION, OperatorType.MULTIPLICATION, OperatorType.DIVISION, OperatorType.EXPONENT, OperatorType.LEFT_PARENTHESIS, OperatorType.RIGHT_PARENTHESIS, OperatorType.ABSOLUTE_VALUE),
-    Level6(3, 6, 32, 1000, 0.9f, OperatorType.ADDITION, OperatorType.SUBTRACTION, OperatorType.MULTIPLICATION, OperatorType.DIVISION, OperatorType.EXPONENT, OperatorType.FACTORIAL, OperatorType.LEFT_PARENTHESIS, OperatorType.RIGHT_PARENTHESIS, OperatorType.ABSOLUTE_VALUE),
+    Level5(3, 6, 16, 500, 0.9f, OperatorType.ADDITION, OperatorType.SUBTRACTION, OperatorType.MULTIPLICATION, OperatorType.DIVISION, OperatorType.EXPONENT, OperatorType.LEFT_PARENTHESIS, OperatorType.RIGHT_PARENTHESIS, OperatorType.ABSOLUTE_VALUE, OperatorType.LEFT_CEILING, OperatorType.RIGHT_CEILING, OperatorType.LEFT_FLOOR, OperatorType.RIGHT_FLOOR),
+    Level6(3, 6, 32, 1000, 0.9f, OperatorType.ADDITION, OperatorType.SUBTRACTION, OperatorType.MULTIPLICATION, OperatorType.DIVISION, OperatorType.EXPONENT, OperatorType.FACTORIAL, OperatorType.LEFT_PARENTHESIS, OperatorType.RIGHT_PARENTHESIS, OperatorType.ABSOLUTE_VALUE, OperatorType.LEFT_CEILING, OperatorType.RIGHT_CEILING, OperatorType.LEFT_FLOOR, OperatorType.RIGHT_FLOOR),
     Level7(4, 4, 64, 2000, 2, OperatorType.ADDITION, OperatorType.SUBTRACTION, OperatorType.MULTIPLICATION, OperatorType.DIVISION, OperatorType.EXPONENT, OperatorType.FACTORIAL);
 
     private final int numOperands;

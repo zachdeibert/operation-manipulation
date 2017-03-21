@@ -5,16 +5,16 @@ import android.os.Parcel;
 import com.github.zachdeibert.operationmanipulation.model.GroupingOperator;
 import com.github.zachdeibert.operationmanipulation.model.Side;
 
-public class ParenthesisOperator extends GroupingOperator {
-    public static final Creator<ParenthesisOperator> CREATOR = new Creator<ParenthesisOperator>() {
+public class FloorOperator extends GroupingOperator {
+    public static final Creator<FloorOperator> CREATOR = new Creator<FloorOperator>() {
         @Override
-        public ParenthesisOperator createFromParcel(Parcel source) {
-            return new ParenthesisOperator(Side.values()[source.readInt()]);
+        public FloorOperator createFromParcel(Parcel source) {
+            return new FloorOperator(Side.values()[source.readInt()]);
         }
 
         @Override
-        public ParenthesisOperator[] newArray(int size) {
-            return new ParenthesisOperator[size];
+        public FloorOperator[] newArray(int size) {
+            return new FloorOperator[size];
         }
     };
 
@@ -27,12 +27,16 @@ public class ParenthesisOperator extends GroupingOperator {
 
     @Override
     public String toString() {
-        return side == Side.Left ? "(" : ")";
+        return side == Side.Left ? "\u230A" : "\u230B";
     }
 
     @Override
     public double run(double val, GroupingOperator other) {
-        return val;
+        if (other instanceof FloorOperator) {
+            return Math.floor(val);
+        } else {
+            return Math.round(val);
+        }
     }
 
     @Override
@@ -40,8 +44,8 @@ public class ParenthesisOperator extends GroupingOperator {
         return side == Side.Left ? 1 : -1;
     }
 
-    public ParenthesisOperator(Side side) {
-        super(0);
+    public FloorOperator(Side side) {
+        super(2);
         this.side = side;
     }
 }

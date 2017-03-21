@@ -40,10 +40,12 @@ public class EquationSolver {
                         levels = Integer.MIN_VALUE;
                     }
                     expression.remove(i);
+                    GroupingOperator other = null;
                     while (levels != 0) {
                         Object next = expression.get(i);
                         expression.remove(i);
                         if (next instanceof GroupingOperator && ((GroupingOperator) next).getType() == ((GroupingOperator) item).getType()) {
+                            other = (GroupingOperator) next;
                             levels += ((GroupingOperator) next).getLevel();
                             if (levels == Integer.MIN_VALUE) {
                                 break;
@@ -56,7 +58,7 @@ public class EquationSolver {
                             subexpression.add(new Operand((int) (double) next));
                         }
                     }
-                    double val = ((GroupingOperator) item).run(solve(subexpression.toArray(new ExpressionItem[0])));
+                    double val = ((GroupingOperator) item).run(solve(subexpression.toArray(new ExpressionItem[0])), other);
                     expression.add(i, val);
                     if (i > 0 && !(expression.get(i - 1) instanceof Operator)) {
                         expression.add(i++, Operator.MULTIPLICATION);

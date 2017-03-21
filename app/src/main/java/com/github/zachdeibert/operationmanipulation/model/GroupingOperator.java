@@ -3,7 +3,7 @@ package com.github.zachdeibert.operationmanipulation.model;
 public abstract class GroupingOperator extends Operator {
     private final int type;
 
-    public abstract double run(double val);
+    public abstract double run(double val, GroupingOperator other);
 
     public abstract int getLevel();
 

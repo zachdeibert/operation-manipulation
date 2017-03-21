@@ -23,7 +23,7 @@ public class AbsoltueValueOperator extends GroupingOperator {
     }
 
     @Override
-    public double run(double val) {
+    public double run(double val, GroupingOperator other) {
         return Math.abs(val);
     }
 
