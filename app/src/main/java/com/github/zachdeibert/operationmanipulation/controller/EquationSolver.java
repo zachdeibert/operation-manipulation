@@ -40,7 +40,7 @@ public class EquationSolver {
                     while (levels > 0) {
                         Object next = expression.get(i);
                         expression.remove(i);
-                        if (next instanceof GroupingOperator) {
+                        if (next instanceof GroupingOperator && ((GroupingOperator) next).getType() == ((GroupingOperator) item).getType()) {
                             levels += ((GroupingOperator) next).getLevel();
                             if (levels > 0) {
                                 subexpression.add((ExpressionItem) next);
@@ -111,7 +111,7 @@ public class EquationSolver {
                 int levels = ((GroupingOperator) item).getLevel();
                 while (levels > 0 && i < expression.length - 1) {
                     ExpressionItem next = expression[++i];
-                    if (next instanceof GroupingOperator) {
+                    if (next instanceof GroupingOperator && ((GroupingOperator) next).getType() == ((GroupingOperator) item).getType()) {
                         levels += ((GroupingOperator) next).getLevel();
                         if (levels > 0) {
                             subexpression.add(next);
