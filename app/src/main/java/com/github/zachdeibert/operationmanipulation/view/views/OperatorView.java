@@ -5,6 +5,7 @@ import android.content.Context;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.AttributeSet;
+import android.view.DragEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
@@ -50,6 +51,8 @@ public class OperatorView extends Button implements View.OnTouchListener {
     }
 
     private Operator operator;
+    private float startDragX;
+    private float startDragY;
 
     public Operator getOperator() {
         return operator;
@@ -58,6 +61,24 @@ public class OperatorView extends Button implements View.OnTouchListener {
     public void setOperator(Operator operator) {
         this.operator = operator;
         setText(operator.toString());
+    }
+
+    public float getStartDragX() {
+        return startDragX;
+    }
+
+    public float getStartDragY() {
+        return startDragY;
+    }
+
+    public void setStartDragEvent(DragEvent event) {
+        if (event == null) {
+            startDragX = 0;
+            startDragY = 0;
+        } else {
+            startDragX = event.getX();
+            startDragY = event.getY();
+        }
     }
 
     public void makeUnique() {
