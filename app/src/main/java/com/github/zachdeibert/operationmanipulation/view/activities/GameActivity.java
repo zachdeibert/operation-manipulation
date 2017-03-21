@@ -5,7 +5,6 @@ import android.app.Activity;
 import android.provider.Settings;
 import android.util.DisplayMetrics;
 import android.util.Log;
-import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -15,12 +14,14 @@ import com.github.zachdeibert.operationmanipulation.controller.EquationGenerator
 import com.github.zachdeibert.operationmanipulation.model.Equation;
 import com.github.zachdeibert.operationmanipulation.model.GameSession;
 import com.github.zachdeibert.operationmanipulation.model.Level;
+import com.github.zachdeibert.operationmanipulation.view.views.AddEquationView;
 import com.github.zachdeibert.operationmanipulation.view.views.EquationContainer;
 import com.github.zachdeibert.operationmanipulation.view.views.EquationListLayout;
 import com.github.zachdeibert.operationmanipulation.view.views.OperationListView;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.InterstitialAd;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -37,6 +38,8 @@ public class GameActivity extends Activity {
     private int solvedCorrectly;
     private int solvedIncorrectly;
     private boolean loading;
+    private AddEquationView addEquationView;
+    private InterstitialAd equationAd;
 
     public EquationGenerator getGenerator() {
         return generator;
@@ -50,13 +53,43 @@ public class GameActivity extends Activity {
         Equation equation = getGenerator().generate();
         EquationContainer view = new EquationContainer(this);
         view.setEquation(equation);
+        equationList.removeView(addEquationView);
         equationList.addView(view);
+        equationList.addView(addEquationView);
     }
 
     public void loadLevel(Level level) {
         generator.setOperands(level.getNumberOfOperands());
         generator.setOperators(level.getAllowedOperators());
         operationList.loadLevel(level);
+    }
+
+    private AdRequest getAdRequest() {
+        AdRequest.Builder ad = new AdRequest.Builder();
+        if (BuildConfig.DEBUG) {
+            try {
+                MessageDigest digest = MessageDigest.getInstance("MD5");
+                digest.update(Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID).getBytes());
+                StringBuffer str = new StringBuffer();
+                for (byte b : digest.digest()) {
+                    str.append(String.format("%02X", b));
+                }
+                ad.addTestDevice(str.toString());
+            } catch (NoSuchAlgorithmException ex) {
+                Log.w("GameActivity", "Unable to find device ID", ex);
+            }
+        }
+        return ad.build();
+    }
+
+    private void requestEquationAd() {
+        equationAd.loadAd(getAdRequest());
+    }
+
+    public void onRequestEquation() {
+        if (equationAd.isLoaded()) {
+            equationAd.show();
+        }
     }
 
     public void onSolvedEquation() {
@@ -133,23 +166,12 @@ public class GameActivity extends Activity {
         operationList = (OperationListView) findViewById(R.id.operationList);
         scoreLabel = (TextView) findViewById(R.id.scoreView);
         equationContainer = (ScrollView) findViewById(R.id.equationContainer);
+        addEquationView = new AddEquationView(this);
+        equationAd = new InterstitialAd(this);
+        equationList.addView(addEquationView);
         setGenerator(new EquationGenerator());
         onRestoreInstanceState(savedInstanceState);
         final AdView adView = (AdView) findViewById(R.id.adView);
-        AdRequest.Builder ad = new AdRequest.Builder();
-        if (BuildConfig.DEBUG) {
-            try {
-                MessageDigest digest = MessageDigest.getInstance("MD5");
-                digest.update(Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID).getBytes());
-                StringBuffer str = new StringBuffer();
-                for (byte b : digest.digest()) {
-                    str.append(String.format("%02X", b));
-                }
-                ad.addTestDevice(str.toString());
-            } catch (NoSuchAlgorithmException ex) {
-                Log.w("GameActivity", "Unable to find device ID", ex);
-            }
-        }
         adView.setAdListener(new AdListener() {
             @Override
             public void onAdFailedToLoad(int i) {
@@ -163,6 +185,15 @@ public class GameActivity extends Activity {
                 scoreLabel.requestLayout();
             }
         });
-        adView.loadAd(ad.build());
+        adView.loadAd(getAdRequest());
+        equationAd.setAdUnitId("ca-app-pub-9531291675030995/4108050463");
+        equationAd.setAdListener(new AdListener() {
+            @Override
+            public void onAdClosed() {
+                requestEquationAd();
+                addEquation();
+            }
+        });
+        requestEquationAd();
     }
 }
