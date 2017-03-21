@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.github.zachdeibert.operationmanipulation.*;
 import com.github.zachdeibert.operationmanipulation.controller.EquationGenerator;
@@ -94,6 +95,8 @@ public class GameActivity extends Activity {
     public void onRequestEquation() {
         if (equationAd.isLoaded()) {
             equationAd.show();
+        } else {
+            Toast.makeText(this, "Unable to show ad", Toast.LENGTH_SHORT).show();
         }
     }
 
