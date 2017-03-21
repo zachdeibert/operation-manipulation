@@ -28,8 +28,4 @@ public class FactorialOperator extends UnaryOperator {
     public double run(double val) {
         return Gamma.gamma(val + 1);
     }
-
-    public FactorialOperator() {
-        super(3);
-    }
 }

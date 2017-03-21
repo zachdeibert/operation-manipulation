@@ -8,7 +8,9 @@ public enum OperatorType {
     MULTIPLICATION(Operator.MULTIPLICATION),
     DIVISION(Operator.DIVISION),
     EXPONENT(Operator.EXPONENT),
-    FACTORIAL(Operator.FACTORIAL);
+    FACTORIAL(Operator.FACTORIAL),
+    LEFTPARENTHESIS(Operator.LEFTPARENTHESIS),
+    RIGHTPARENTHESIS(Operator.RIGHTPARENTHESIS);
 
     private final Operator operator;
 

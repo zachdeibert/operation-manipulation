@@ -5,10 +5,12 @@ import android.util.Log;
 import com.github.zachdeibert.operationmanipulation.model.BinaryOperator;
 import com.github.zachdeibert.operationmanipulation.model.Equation;
 import com.github.zachdeibert.operationmanipulation.model.ExpressionItem;
+import com.github.zachdeibert.operationmanipulation.model.GroupingOperator;
 import com.github.zachdeibert.operationmanipulation.model.Operand;
 import com.github.zachdeibert.operationmanipulation.model.Operator;
 import com.github.zachdeibert.operationmanipulation.model.UnaryOperator;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -31,6 +33,32 @@ public class EquationSolver {
                     expression.set(i - 1, result);
                     expression.remove(i);
                     --i;
+                } else if (item instanceof GroupingOperator) {
+                    List<ExpressionItem> subexpression = new ArrayList<>();
+                    int levels = 1;
+                    expression.remove(i);
+                    while (levels > 0) {
+                        Object next = expression.get(i);
+                        expression.remove(i);
+                        if (next instanceof GroupingOperator) {
+                            levels += ((GroupingOperator) next).getLevel();
+                            if (levels > 0) {
+                                subexpression.add((ExpressionItem) next);
+                            }
+                        } else if (next instanceof ExpressionItem) {
+                            subexpression.add((ExpressionItem) next);
+                        } else {
+                            subexpression.add(new Operand((int) (double) next));
+                        }
+                    }
+                    double val = solve(subexpression.toArray(new ExpressionItem[0]));
+                    expression.add(i, val);
+                    if (i > 0 && !(expression.get(i - 1) instanceof Operator)) {
+                        expression.add(i++, Operator.MULTIPLICATION);
+                    }
+                    if (i < expression.size() - 1 && !(expression.get(i + 1) instanceof Operator)) {
+                        expression.add(++i, Operator.MULTIPLICATION);
+                    }
                 }
             }
         }
@@ -54,16 +82,19 @@ public class EquationSolver {
         return (double) expr.get(0);
     }
 
-    public static boolean isComplete(Equation equation) {
+    public static boolean isComplete(ExpressionItem... expression) {
         boolean wasOperator = true;
         boolean canUnary = false;
-        for (ExpressionItem item : equation.getLeftSide()) {
+        boolean implicitMultiply = false;
+        for (int i = 0; i < expression.length; ++i) {
+            ExpressionItem item = expression[i];
             if (item instanceof BinaryOperator) {
                 if (wasOperator) {
                     Log.d("EquationSolver", "Multiple adjacent operators");
                     return false;
                 } else {
                     wasOperator = true;
+                    implicitMultiply = false;
                 }
             } else if (item instanceof UnaryOperator) {
                 if (wasOperator) {
@@ -72,11 +103,39 @@ public class EquationSolver {
                 } else if (!canUnary) {
                     Log.d("EquationSolver", "Missing operand");
                     return false;
+                } else {
+                    implicitMultiply = false;
                 }
-            } else {
-                if (wasOperator) {
+            } else if (item instanceof GroupingOperator) {
+                List<ExpressionItem> subexpression = new ArrayList<>();
+                int levels = ((GroupingOperator) item).getLevel();
+                while (levels > 0 && i < expression.length - 1) {
+                    ExpressionItem next = expression[++i];
+                    if (next instanceof GroupingOperator) {
+                        levels += ((GroupingOperator) next).getLevel();
+                        if (levels > 0) {
+                            subexpression.add(next);
+                        }
+                    } else {
+                        subexpression.add(next);
+                    }
+                }
+                if (levels > 0) {
+                    Log.d("EquationSolver", "Unmatched group");
+                    return false;
+                }
+                if (isComplete(subexpression.toArray(new ExpressionItem[0]))) {
                     wasOperator = false;
                     canUnary = true;
+                    implicitMultiply = true;
+                } else {
+                    return false;
+                }
+            } else {
+                if (wasOperator || implicitMultiply) {
+                    wasOperator = false;
+                    canUnary = true;
+                    implicitMultiply = false;
                 } else {
                     Log.d("EquationSovler", "Missing operator");
                     return false;
@@ -84,6 +143,10 @@ public class EquationSolver {
             }
         }
         return !wasOperator;
+    }
+
+    public static boolean isComplete(Equation equation) {
+        return isComplete(equation.getLeftSide());
     }
 
     public static boolean isCorrect(Equation equation) {
