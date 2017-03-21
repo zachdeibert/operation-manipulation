@@ -5,6 +5,7 @@ import android.util.Log;
 import com.github.zachdeibert.operationmanipulation.model.BinaryOperator;
 import com.github.zachdeibert.operationmanipulation.model.Equation;
 import com.github.zachdeibert.operationmanipulation.model.ExpressionItem;
+import com.github.zachdeibert.operationmanipulation.model.Level;
 import com.github.zachdeibert.operationmanipulation.model.Operand;
 import com.github.zachdeibert.operationmanipulation.model.OperatorType;
 import com.github.zachdeibert.operationmanipulation.model.UnaryOperator;
@@ -15,6 +16,7 @@ public class EquationGenerator {
     private final Random random;
     private int operands;
     private OperatorType[] operators;
+    private Level level;
 
     private boolean solve(Equation eq, BinaryOperator[] binaryOperators, UnaryOperator[] unaryOperators) {
         if (eq.getOperandCount() == binaryOperators.length + 1) {
@@ -93,7 +95,7 @@ public class EquationGenerator {
                 operands[i] = new Operand(random.nextInt(10));
             }
             result = random.nextInt(10);
-            Equation eq = new Equation(new Operand(result), operands);
+            Equation eq = new Equation(getLevel(), new Operand(result), operands);
             if (solve(eq)) {
                 return eq;
             }
@@ -104,24 +106,22 @@ public class EquationGenerator {
         return operands;
     }
 
-    public void setOperands(int operands) {
-        if (operands < 2) {
-            throw new IllegalArgumentException("There must be at least two operands to the equation");
-        }
-        this.operands = operands;
-    }
-
     public OperatorType[] getOperators() {
         return operators;
     }
 
-    public void setOperators(OperatorType... operators) {
-        this.operators = operators;
+    public Level getLevel() {
+        return level;
+    }
+
+    public void setLevel(Level level) {
+        this.level = level;
+        this.operands = level.getNumberOfOperands();
+        this.operators = level.getAllowedOperators();
     }
 
     public EquationGenerator() {
         random = new Random();
-        setOperands(3);
-        setOperators(OperatorType.values());
+        setLevel(Level.Level1);
     }
 }

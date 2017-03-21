@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.provider.Settings;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -17,6 +18,7 @@ import com.github.zachdeibert.operationmanipulation.model.Level;
 import com.github.zachdeibert.operationmanipulation.view.views.AddEquationView;
 import com.github.zachdeibert.operationmanipulation.view.views.EquationContainer;
 import com.github.zachdeibert.operationmanipulation.view.views.EquationListLayout;
+import com.github.zachdeibert.operationmanipulation.view.views.LevelUpView;
 import com.github.zachdeibert.operationmanipulation.view.views.OperationListView;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
@@ -63,8 +65,7 @@ public class GameActivity extends Activity {
     }
 
     public void loadLevel(Level level) {
-        generator.setOperands(level.getNumberOfOperands());
-        generator.setOperators(level.getAllowedOperators());
+        generator.setLevel(level);
         operationList.loadLevel(level);
     }
 
@@ -108,17 +109,22 @@ public class GameActivity extends Activity {
                 solvedIncorrectly = 0;
                 List<EquationContainer> unsolved = new ArrayList<>();
                 for (int i = 0; i < equationList.getChildCount(); ++i) {
-                    EquationContainer equation = (EquationContainer) equationList.getChildAt(i);
-                    if (!equation.isSolved()) {
-                        unsolved.add(equation);
+                    View view = equationList.getChildAt(i);
+                    if (view instanceof EquationContainer) {
+                        EquationContainer equation = (EquationContainer) equationList.getChildAt(i);
+                        if (!equation.isSolved()) {
+                            unsolved.add(equation);
+                        }
                     }
                 }
                 for (EquationContainer equation : unsolved) {
                     equationList.removeView(equation);
                 }
+                equationList.addView(new LevelUpView(this));
                 for (int i = 0; i < session.getLevel().getMaximumUnsolvedPuzzles(); ++i) {
                     addEquation();
                 }
+                arrangeAddEquationView();
             } else {
                 addEquation();
             }

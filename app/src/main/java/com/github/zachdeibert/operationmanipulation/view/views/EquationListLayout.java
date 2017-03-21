@@ -8,6 +8,7 @@ import android.util.SparseArray;
 import android.view.View;
 import android.widget.LinearLayout;
 
+import com.github.zachdeibert.operationmanipulation.model.Level;
 import com.github.zachdeibert.operationmanipulation.view.activities.GameActivity;
 
 import java.util.ArrayList;
@@ -30,9 +31,16 @@ public class EquationListLayout extends LinearLayout {
         private final List<EquationContainer.SavedState> states;
 
         private void apply(EquationListLayout view) {
+            Level level = null;
             for (EquationContainer.SavedState state : states) {
                 EquationContainer equationView = new EquationContainer(view.getContext());
                 equationView.onRestoreInstanceState(state);
+                if (level == null) {
+                    level = equationView.getEquation().getLevel();
+                } else if (level != equationView.getEquation().getLevel()) {
+                    level = equationView.getEquation().getLevel();
+                    view.addView(new LevelUpView(view.getContext()));
+                }
                 view.addView(equationView);
             }
             ((GameActivity) view.getContext()).arrangeAddEquationView();

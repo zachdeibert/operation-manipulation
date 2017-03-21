@@ -23,6 +23,7 @@ public class Equation implements Parcelable {
     private final List<ExpressionItem> lhs;
     private int operandCount;
     private Operand rhs;
+    private Level level;
 
     public ExpressionItem[] getLeftSide() {
         return lhs.toArray(new ExpressionItem[0]);
@@ -40,6 +41,14 @@ public class Equation implements Parcelable {
 
     public void setRightSide(Operand rhs) {
         this.rhs = rhs;
+    }
+
+    public Level getLevel() {
+        return level;
+    }
+
+    public void setLevel(Level level) {
+        this.level = level;
     }
 
     public int getOperandCount() {
@@ -90,15 +99,17 @@ public class Equation implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeList(lhs);
-        rhs.writeToParcel(dest, flags);
+        getRightSide().writeToParcel(dest, flags);
+        dest.writeInt(getLevel().ordinal());
     }
 
     public Equation() {
         lhs = new ArrayList<>();
     }
 
-    public Equation(Operand rhs, Operand... lhs) {
+    public Equation(Level level, Operand rhs, Operand... lhs) {
         this();
+        setLevel(level);
         setLeftSide(lhs);
         setRightSide(rhs);
     }
@@ -106,5 +117,6 @@ public class Equation implements Parcelable {
     private Equation(Parcel parcel) {
         lhs = parcel.readArrayList(ClassLoader.getSystemClassLoader());
         rhs = Operand.CREATOR.createFromParcel(parcel);
+        level = Level.values()[parcel.readInt()];
     }
 }
