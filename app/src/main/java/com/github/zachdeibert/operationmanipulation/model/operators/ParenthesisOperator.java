@@ -3,13 +3,9 @@ package com.github.zachdeibert.operationmanipulation.model.operators;
 import android.os.Parcel;
 
 import com.github.zachdeibert.operationmanipulation.model.GroupingOperator;
+import com.github.zachdeibert.operationmanipulation.model.Side;
 
 public class ParenthesisOperator extends GroupingOperator {
-    public enum Side {
-        Left,
-        Right
-    }
-
     public static final Creator<ParenthesisOperator> CREATOR = new Creator<ParenthesisOperator>() {
         @Override
         public ParenthesisOperator createFromParcel(Parcel source) {

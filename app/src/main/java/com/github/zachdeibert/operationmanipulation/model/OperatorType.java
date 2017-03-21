@@ -9,8 +9,9 @@ public enum OperatorType {
     DIVISION(Operator.DIVISION),
     EXPONENT(Operator.EXPONENT),
     FACTORIAL(Operator.FACTORIAL),
-    LEFTPARENTHESIS(Operator.LEFTPARENTHESIS),
-    RIGHTPARENTHESIS(Operator.RIGHTPARENTHESIS);
+    LEFT_PARENTHESIS(Operator.LEFT_PARENTHESIS),
+    RIGHT_PARENTHESIS(Operator.RIGHT_PARENTHESIS),
+    ABSOLUTE_VALUE(Operator.ABSOLUTE_VALUE);
 
     private final Operator operator;
 

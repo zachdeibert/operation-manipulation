@@ -3,6 +3,7 @@ package com.github.zachdeibert.operationmanipulation.model;
 import android.os.Parcel;
 import android.util.Log;
 
+import com.github.zachdeibert.operationmanipulation.model.operators.AbsoltueValueOperator;
 import com.github.zachdeibert.operationmanipulation.model.operators.AdditionOperator;
 import com.github.zachdeibert.operationmanipulation.model.operators.DivisionOperator;
 import com.github.zachdeibert.operationmanipulation.model.operators.ExponentOperator;
@@ -18,8 +19,9 @@ public abstract class Operator extends ExpressionItem implements Cloneable {
     public static final Operator DIVISION = new DivisionOperator();
     public static final Operator EXPONENT = new ExponentOperator();
     public static final Operator FACTORIAL = new FactorialOperator();
-    public static final Operator LEFTPARENTHESIS = new ParenthesisOperator(ParenthesisOperator.Side.Left);
-    public static final Operator RIGHTPARENTHESIS = new ParenthesisOperator(ParenthesisOperator.Side.Right);
+    public static final Operator LEFT_PARENTHESIS = new ParenthesisOperator(Side.Left);
+    public static final Operator RIGHT_PARENTHESIS = new ParenthesisOperator(Side.Right);
+    public static final Operator ABSOLUTE_VALUE = new AbsoltueValueOperator();
 
     private final int order;
 

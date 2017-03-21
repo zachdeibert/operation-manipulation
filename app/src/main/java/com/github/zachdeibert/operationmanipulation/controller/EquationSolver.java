@@ -35,14 +35,19 @@ public class EquationSolver {
                     --i;
                 } else if (item instanceof GroupingOperator) {
                     List<ExpressionItem> subexpression = new ArrayList<>();
-                    int levels = 1;
+                    int levels = ((GroupingOperator) item).getLevel();
+                    if (levels == 0) {
+                        levels = Integer.MIN_VALUE;
+                    }
                     expression.remove(i);
-                    while (levels > 0) {
+                    while (levels != 0) {
                         Object next = expression.get(i);
                         expression.remove(i);
                         if (next instanceof GroupingOperator && ((GroupingOperator) next).getType() == ((GroupingOperator) item).getType()) {
                             levels += ((GroupingOperator) next).getLevel();
-                            if (levels > 0) {
+                            if (levels == Integer.MIN_VALUE) {
+                                break;
+                            } else if (levels != 0) {
                                 subexpression.add((ExpressionItem) next);
                             }
                         } else if (next instanceof ExpressionItem) {
@@ -51,7 +56,7 @@ public class EquationSolver {
                             subexpression.add(new Operand((int) (double) next));
                         }
                     }
-                    double val = solve(subexpression.toArray(new ExpressionItem[0]));
+                    double val = ((GroupingOperator) item).run(solve(subexpression.toArray(new ExpressionItem[0])));
                     expression.add(i, val);
                     if (i > 0 && !(expression.get(i - 1) instanceof Operator)) {
                         expression.add(i++, Operator.MULTIPLICATION);
@@ -101,7 +106,7 @@ public class EquationSolver {
                     Log.d("EquationSolver", "Multiple adjacent operators");
                     return false;
                 } else if (!canUnary) {
-                    Log.d("EquationSolver", "Missing operand");
+                    Log.d("EquationSolver", "Started with an operator");
                     return false;
                 } else {
                     implicitMultiply = false;
@@ -109,11 +114,16 @@ public class EquationSolver {
             } else if (item instanceof GroupingOperator) {
                 List<ExpressionItem> subexpression = new ArrayList<>();
                 int levels = ((GroupingOperator) item).getLevel();
-                while (levels > 0 && i < expression.length - 1) {
+                if (levels == 0) {
+                    levels = Integer.MIN_VALUE;
+                }
+                while (levels != 0 && i < expression.length - 1) {
                     ExpressionItem next = expression[++i];
                     if (next instanceof GroupingOperator && ((GroupingOperator) next).getType() == ((GroupingOperator) item).getType()) {
                         levels += ((GroupingOperator) next).getLevel();
-                        if (levels > 0) {
+                        if (levels == Integer.MIN_VALUE) {
+                            break;
+                        } else if (levels != 0) {
                             subexpression.add(next);
                         }
                     } else {
@@ -129,6 +139,7 @@ public class EquationSolver {
                     canUnary = true;
                     implicitMultiply = true;
                 } else {
+                    Log.d("EquationSolver", "Subexpression failed");
                     return false;
                 }
             } else {
@@ -142,7 +153,12 @@ public class EquationSolver {
                 }
             }
         }
-        return !wasOperator;
+        if (wasOperator) {
+            Log.d("EquationSolver", "Ended with an operator");
+            return false;
+        } else {
+            return true;
+        }
     }
 
     public static boolean isComplete(Equation equation) {
@@ -152,6 +168,11 @@ public class EquationSolver {
     public static boolean isCorrect(Equation equation) {
         double left = solve(equation.getLeftSide());
         double right = equation.getRightSide().getValue();
-        return left == right && !Double.isNaN(left);
+        if (left == right && !Double.isNaN(left)) {
+            return true;
+        } else {
+            Log.d("EquationSolver", String.format("Expected %f but got %f", right, left));
+            return false;
+        }
     }
 }
