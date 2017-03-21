@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "546293843139",
+    "firebase_url": "https://operation-manipulation.firebaseio.com",
+    "project_id": "operation-manipulation",
+    "storage_bucket": "operation-manipulation.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:546293843139:android:db1262e9b38e3d7a",
+        "android_client_info": {
+          "package_name": "com.github.zachdeibert.operationmanipulation"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "546293843139-6o90oplkeole8ttqr20amf40acq23gg7.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.github.zachdeibert.operationmanipulation",
+            "certificate_hash": "70bd8819214090e1e24ae6943b57e7f88077af87"
+          }
+        },
+        {
+          "client_id": "546293843139-mmk1j7cjvif3cj0ht7asl913hc5vb31u.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAq0ER33ta3FlUj9G1MUD6vcRsQVZy717s"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "546293843139-mmk1j7cjvif3cj0ht7asl913hc5vb31u.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
