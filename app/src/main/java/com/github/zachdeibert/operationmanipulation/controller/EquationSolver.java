@@ -168,11 +168,6 @@ public class EquationSolver {
     public static boolean isCorrect(Equation equation) {
         double left = solve(equation.getLeftSide());
         double right = equation.getRightSide().getValue();
-        if (left == right && !Double.isNaN(left)) {
-            return true;
-        } else {
-            Log.d("EquationSolver", String.format("Expected %f but got %f", right, left));
-            return false;
-        }
+        return left == right && !Double.isNaN(left);
     }
 }
