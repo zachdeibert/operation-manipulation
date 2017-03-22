@@ -16,7 +16,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class EquationSolver {
-    private static final boolean HIDE_PARSE_ERRORS = false;
+    private static final boolean HIDE_PARSE_ERRORS = true;
 
     private static void parseError(String error) {
         if (!HIDE_PARSE_ERRORS && BuildConfig.DEBUG) {

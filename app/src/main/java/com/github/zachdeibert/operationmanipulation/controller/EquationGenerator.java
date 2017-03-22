@@ -45,6 +45,28 @@ public class EquationGenerator {
                     list.add((GroupingOperator) op.getOperator());
                 }
             }
+            if (operatorTypes.isEmpty()) {
+                eq.clear();
+                int i = 0;
+                for (ExpressionItem item : eq.getLeftSide()) {
+                    if (item instanceof Operand) {
+                        ExpressionItem op = item;
+                        if (unaryOperators[i] != null) {
+                            unaryOperators[i] = (UnaryOperator) unaryOperators[i].clone();
+                            eq.insertOperatorAfter(op, unaryOperators[i]);
+                            op = unaryOperators[i];
+                        }
+                        eq.insertOperatorAfter(op, binaryOperators[i++]);
+                        if (i >= binaryOperators.length) {
+                            break;
+                        }
+                    }
+                }
+                if (EquationSolver.isCorrect(eq)) {
+                    Log.i("EquationGenerator", eq.toString());
+                    return true;
+                }
+            }
             for (int type : operatorTypes.keySet()) {
                 List<GroupingOperator> list = operatorTypes.get(type);
                 for (int start = 0; start < 2 * eq.getOperandCount() + numUnary - 1; ++start) {
