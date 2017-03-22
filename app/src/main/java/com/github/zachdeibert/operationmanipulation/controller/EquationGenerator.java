@@ -15,13 +15,17 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Queue;
 import java.util.Random;
+import java.util.concurrent.ArrayBlockingQueue;
 
-public class EquationGenerator {
+public class EquationGenerator extends Thread {
+    private static final int QUEUE_SIZE = 3;
     private final Random random;
     private int operands;
     private OperatorType[] operators;
     private Level level;
+    private final Queue<Equation> generatedEquations;
 
     private boolean solve(Equation eq, BinaryOperator[] binaryOperators, UnaryOperator[] unaryOperators) {
         if (eq.getOperandCount() == binaryOperators.length + 1) {
@@ -165,6 +169,32 @@ public class EquationGenerator {
         }
     }
 
+    public Equation getEquation() {
+        if (generatedEquations.size() > 0) {
+            return generatedEquations.poll();
+        } else {
+            return generate();
+        }
+    }
+
+    @Override
+    public void run() {
+        while (true) {
+            Equation eq = null;
+            try {
+                if (generatedEquations.size() < QUEUE_SIZE) {
+                    eq = generate();
+                }
+                Thread.sleep(100);
+            } catch (InterruptedException ex) {
+                continue;
+            }
+            if (eq != null) {
+                generatedEquations.offer(eq);
+            }
+        }
+    }
+
     public int getOperands() {
         return operands;
     }
@@ -181,10 +211,13 @@ public class EquationGenerator {
         this.level = level;
         this.operands = level.getNumberOfOperands();
         this.operators = level.getAllowedOperators();
+        interrupt();
+        generatedEquations.clear();
     }
 
     public EquationGenerator() {
         random = new Random();
+        generatedEquations = new ArrayBlockingQueue<>(QUEUE_SIZE);
         setLevel(Level.Level1);
     }
 }

@@ -58,7 +58,7 @@ public class GameActivity extends Activity {
     }
 
     public void addEquation() {
-        Equation equation = getGenerator().generate();
+        Equation equation = getGenerator().getEquation();
         EquationContainer view = new EquationContainer(this);
         view.setEquation(equation);
         equationList.addView(view);
@@ -183,6 +183,7 @@ public class GameActivity extends Activity {
         equationAd = new InterstitialAd(this);
         equationList.addView(addEquationView);
         setGenerator(new EquationGenerator());
+        getGenerator().start();
         onRestoreInstanceState(savedInstanceState);
         final AdView adView = (AdView) findViewById(R.id.adView);
         adView.setAdListener(new AdListener() {
