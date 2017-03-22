@@ -2,6 +2,7 @@ package com.github.zachdeibert.operationmanipulation.controller;
 
 import android.util.Log;
 
+import com.github.zachdeibert.operationmanipulation.BuildConfig;
 import com.github.zachdeibert.operationmanipulation.model.BinaryOperator;
 import com.github.zachdeibert.operationmanipulation.model.Equation;
 import com.github.zachdeibert.operationmanipulation.model.ExpressionItem;
@@ -15,6 +16,14 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class EquationSolver {
+    private static final boolean HIDE_PARSE_ERRORS = false;
+
+    private static void parseError(String error) {
+        if (!HIDE_PARSE_ERRORS && BuildConfig.DEBUG) {
+            Log.d("EquationSolver", error);
+        }
+    }
+
     private static void solve(List<Object> expression, int order) {
         for (int i = 0; i < expression.size(); ++i) {
             Object item = expression.get(i);
@@ -97,7 +106,7 @@ public class EquationSolver {
             ExpressionItem item = expression[i];
             if (item instanceof BinaryOperator) {
                 if (wasOperator) {
-                    Log.d("EquationSolver", "Multiple adjacent operators");
+                    parseError("Multiple adjacent operators");
                     return false;
                 } else {
                     wasOperator = true;
@@ -105,10 +114,10 @@ public class EquationSolver {
                 }
             } else if (item instanceof UnaryOperator) {
                 if (wasOperator) {
-                    Log.d("EquationSolver", "Multiple adjacent operators");
+                    parseError("Multiple adjacent operators");
                     return false;
                 } else if (!canUnary) {
-                    Log.d("EquationSolver", "Started with an operator");
+                    parseError("Started with an operator");
                     return false;
                 } else {
                     implicitMultiply = false;
@@ -132,8 +141,8 @@ public class EquationSolver {
                         subexpression.add(next);
                     }
                 }
-                if (levels > 0) {
-                    Log.d("EquationSolver", "Unmatched group");
+                if (levels != 0) {
+                    parseError("Unmatched group");
                     return false;
                 }
                 if (isComplete(subexpression.toArray(new ExpressionItem[0]))) {
@@ -141,7 +150,7 @@ public class EquationSolver {
                     canUnary = true;
                     implicitMultiply = true;
                 } else {
-                    Log.d("EquationSolver", "Subexpression failed");
+                    parseError("Subexpression failed");
                     return false;
                 }
             } else {
@@ -150,13 +159,13 @@ public class EquationSolver {
                     canUnary = true;
                     implicitMultiply = false;
                 } else {
-                    Log.d("EquationSovler", "Missing operator");
+                    parseError("Missing operator");
                     return false;
                 }
             }
         }
         if (wasOperator) {
-            Log.d("EquationSolver", "Ended with an operator");
+            parseError("Ended with an operator");
             return false;
         } else {
             return true;

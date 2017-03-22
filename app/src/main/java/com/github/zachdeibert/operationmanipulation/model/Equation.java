@@ -65,14 +65,16 @@ public class Equation implements Parcelable {
         lhs.removeAll(items);
     }
 
-    public void insertOperatorBefore(ExpressionItem reference, Operator operator) {
-        int index = lhs.indexOf(reference);
+    public void insertOperatorAt(int index, Operator operator) {
         lhs.add(index, operator);
     }
 
+    public void insertOperatorBefore(ExpressionItem reference, Operator operator) {
+        insertOperatorAt(lhs.indexOf(reference), operator);
+    }
+
     public void insertOperatorAfter(ExpressionItem reference, Operator operator) {
-        int index = lhs.indexOf(reference);
-        lhs.add(index + 1, operator);
+        insertOperatorAt(lhs.indexOf(reference) + 1, operator);
     }
 
     public void removeOperator(Operator operator) {

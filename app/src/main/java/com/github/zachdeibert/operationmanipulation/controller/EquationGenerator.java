@@ -5,11 +5,16 @@ import android.util.Log;
 import com.github.zachdeibert.operationmanipulation.model.BinaryOperator;
 import com.github.zachdeibert.operationmanipulation.model.Equation;
 import com.github.zachdeibert.operationmanipulation.model.ExpressionItem;
+import com.github.zachdeibert.operationmanipulation.model.GroupingOperator;
 import com.github.zachdeibert.operationmanipulation.model.Level;
 import com.github.zachdeibert.operationmanipulation.model.Operand;
 import com.github.zachdeibert.operationmanipulation.model.OperatorType;
 import com.github.zachdeibert.operationmanipulation.model.UnaryOperator;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 public class EquationGenerator {
@@ -20,28 +25,64 @@ public class EquationGenerator {
 
     private boolean solve(Equation eq, BinaryOperator[] binaryOperators, UnaryOperator[] unaryOperators) {
         if (eq.getOperandCount() == binaryOperators.length + 1) {
-            eq.clear();
-            int i = 0;
-            for (ExpressionItem item : eq.getLeftSide()) {
-                if (item instanceof Operand) {
-                    ExpressionItem op = item;
-                    if (unaryOperators[i] != null) {
-                        unaryOperators[i] = (UnaryOperator) unaryOperators[i].clone();
-                        eq.insertOperatorAfter(op, unaryOperators[i]);
-                        op = unaryOperators[i];
+            int numUnary = 0;
+            for (UnaryOperator op : unaryOperators) {
+                if (op != null) {
+                    ++numUnary;
+                }
+            }
+            Map<Integer, List<GroupingOperator>> operatorTypes = new HashMap<>();
+            for (OperatorType op : getOperators()) {
+                if (op.getOperator() instanceof GroupingOperator) {
+                    int type = ((GroupingOperator) op.getOperator()).getType();
+                    List<GroupingOperator> list;
+                    if (operatorTypes.containsKey(type)) {
+                        list = operatorTypes.get(type);
+                    } else {
+                        list = new ArrayList<>();
+                        operatorTypes.put(type, list);
                     }
-                    eq.insertOperatorAfter(op, binaryOperators[i++]);
-                    if (i >= binaryOperators.length) {
-                        break;
+                    list.add((GroupingOperator) op.getOperator());
+                }
+            }
+            for (int type : operatorTypes.keySet()) {
+                List<GroupingOperator> list = operatorTypes.get(type);
+                for (int start = 0; start < 2 * eq.getOperandCount() + numUnary - 1; ++start) {
+                    for (int end = start + type == 0 ? 3 : 2; end < 2 * eq.getOperandCount() + numUnary; ++end) {
+                        for (GroupingOperator startOp : list) {
+                            if (startOp.getLevel() >= 0) {
+                                for (GroupingOperator endOp : list) {
+                                    if (endOp.getLevel() <= 0) {
+                                        eq.clear();
+                                        int i = 0;
+                                        for (ExpressionItem item : eq.getLeftSide()) {
+                                            if (item instanceof Operand) {
+                                                ExpressionItem op = item;
+                                                if (unaryOperators[i] != null) {
+                                                    unaryOperators[i] = (UnaryOperator) unaryOperators[i].clone();
+                                                    eq.insertOperatorAfter(op, unaryOperators[i]);
+                                                    op = unaryOperators[i];
+                                                }
+                                                eq.insertOperatorAfter(op, binaryOperators[i++]);
+                                                if (i >= binaryOperators.length) {
+                                                    break;
+                                                }
+                                            }
+                                        }
+                                        eq.insertOperatorAt(start, startOp);
+                                        eq.insertOperatorAt(end, endOp);
+                                        if (EquationSolver.isComplete(eq) && EquationSolver.isCorrect(eq)) {
+                                            Log.i("EquationGenerator", eq.toString());
+                                            return true;
+                                        }
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             }
-            if (EquationSolver.isCorrect(eq)) {
-                Log.d("EquationGenerator", eq.toString());
-                return true;
-            } else {
-                return false;
-            }
+            return false;
         } else {
             BinaryOperator[] subs = new BinaryOperator[binaryOperators.length + 1];
             System.arraycopy(binaryOperators, 0, subs, 0, binaryOperators.length);
