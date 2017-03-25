@@ -10,6 +10,7 @@ import com.github.zachdeibert.operationmanipulation.model.GroupingOperator;
 import com.github.zachdeibert.operationmanipulation.model.Operand;
 import com.github.zachdeibert.operationmanipulation.model.Operator;
 import com.github.zachdeibert.operationmanipulation.model.UnaryOperator;
+import com.github.zachdeibert.operationmanipulation.model.operators.SubtractionOperator;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -29,8 +30,24 @@ public class EquationSolver {
             Object item = expression.get(i);
             if (item instanceof Operator && ((Operator) item).getOrder() == order) {
                 if (item instanceof BinaryOperator) {
-                    double lhs = (double) expression.get(i - 1);
-                    double rhs = (double) expression.get(i + 1);
+                    Object lhso = i > 0 ? expression.get(i - 1) : null;
+                    Object rhso = expression.get(i + 1);
+                    double lhs;
+                    double rhs;
+                    if (lhso == null || !(lhso instanceof Double && rhso instanceof Double)) {
+                        if (rhso instanceof SubtractionOperator) {
+                            expression.remove(i + 1);
+                            lhs = (double) lhso;
+                            rhs = -(double) expression.get(i + 1);
+                        } else {
+                            expression.remove(i);
+                            expression.set(i, -((double) rhso));
+                            continue;
+                        }
+                    } else {
+                        lhs = (double) lhso;
+                        rhs = (double) rhso;
+                    }
                     double result = ((BinaryOperator) item).run(lhs, rhs);
                     expression.set(i - 1, result);
                     expression.remove(i);
@@ -102,18 +119,28 @@ public class EquationSolver {
         boolean wasOperator = true;
         boolean canUnary = false;
         boolean implicitMultiply = false;
+        boolean wasNegate = false;
         for (int i = 0; i < expression.length; ++i) {
             ExpressionItem item = expression[i];
             if (item instanceof BinaryOperator) {
                 if (wasOperator) {
-                    parseError("Multiple adjacent operators");
-                    return false;
+                    if (item instanceof SubtractionOperator) {
+                        if (wasNegate) {
+                            parseError("Multiple negations on a single operand");
+                            return false;
+                        } else {
+                            wasNegate = true;
+                        }
+                    } else {
+                        parseError("Multiple adjacent operators");
+                        return false;
+                    }
                 } else {
                     wasOperator = true;
                     implicitMultiply = false;
                 }
             } else if (item instanceof UnaryOperator) {
-                if (wasOperator) {
+                if (wasOperator || wasNegate) {
                     parseError("Multiple adjacent operators");
                     return false;
                 } else if (!canUnary) {
@@ -149,6 +176,7 @@ public class EquationSolver {
                 if (isComplete(subexpression.toArray(new ExpressionItem[0]))) {
                     wasOperator = false;
                     canUnary = true;
+                    wasNegate = false;
                     implicitMultiply = true;
                 } else {
                     parseError("Subexpression failed");
@@ -158,6 +186,7 @@ public class EquationSolver {
                 if (wasOperator || implicitMultiply) {
                     wasOperator = false;
                     canUnary = true;
+                    wasNegate = false;
                     implicitMultiply = false;
                 } else {
                     parseError("Missing operator");
@@ -165,7 +194,7 @@ public class EquationSolver {
                 }
             }
         }
-        if (wasOperator) {
+        if (wasOperator || wasNegate) {
             parseError("Ended with an operator");
             return false;
         } else {
