@@ -133,6 +133,7 @@ public class EquationSolver {
                     if (next instanceof GroupingOperator && ((GroupingOperator) next).getType() == ((GroupingOperator) item).getType()) {
                         levels += ((GroupingOperator) next).getLevel();
                         if (levels == Integer.MIN_VALUE) {
+                            levels = 0;
                             break;
                         } else if (levels != 0) {
                             subexpression.add(next);
