@@ -8,6 +8,7 @@ import com.github.zachdeibert.operationmanipulation.model.ExpressionItem;
 import com.github.zachdeibert.operationmanipulation.model.GroupingOperator;
 import com.github.zachdeibert.operationmanipulation.model.Level;
 import com.github.zachdeibert.operationmanipulation.model.Operand;
+import com.github.zachdeibert.operationmanipulation.model.Operator;
 import com.github.zachdeibert.operationmanipulation.model.OperatorType;
 import com.github.zachdeibert.operationmanipulation.model.UnaryOperator;
 
@@ -27,8 +28,8 @@ public class EquationGenerator extends Thread {
     private Level level;
     private final Queue<Equation> generatedEquations;
 
-    private boolean solve(Equation eq, BinaryOperator[] binaryOperators, UnaryOperator[] unaryOperators) {
-        if (eq.getOperandCount() == binaryOperators.length + 1) {
+    private boolean solve(Equation eq, BinaryOperator[] binaryOperators, UnaryOperator[] unaryOperators, boolean[] negate) {
+        if (eq.getOperandCount() == negate.length) {
             int numUnary = 0;
             for (UnaryOperator op : unaryOperators) {
                 if (op != null) {
@@ -97,6 +98,14 @@ public class EquationGenerator extends Thread {
                                         }
                                         eq.insertOperatorAt(start, startOp);
                                         eq.insertOperatorAt(end, endOp);
+                                        i = 0;
+                                        for (ExpressionItem item : eq.getLeftSide()) {
+                                            if (item instanceof Operand) {
+                                                if (negate[i++]) {
+                                                    eq.insertOperatorBefore(item, Operator.SUBTRACTION);
+                                                }
+                                            }
+                                        }
                                         if (EquationSolver.isComplete(eq) && EquationSolver.isCorrect(eq)) {
                                             Log.i("EquationGenerator", eq.toString());
                                             return true;
@@ -109,6 +118,21 @@ public class EquationGenerator extends Thread {
                 }
             }
             return false;
+        } else {
+            boolean[] subs = new boolean[negate.length + 1];
+            System.arraycopy(negate, 0, subs, 0, negate.length);
+            subs[negate.length] = false;
+            if (solve(eq, binaryOperators, unaryOperators, subs)) {
+                return true;
+            }
+            subs[negate.length] = true;
+            return solve(eq, binaryOperators, unaryOperators, subs);
+        }
+    }
+
+    private boolean solve(Equation eq, BinaryOperator[] binaryOperators, UnaryOperator[] unaryOperators) {
+        if (eq.getOperandCount() == binaryOperators.length + 1) {
+            return solve(eq, binaryOperators, unaryOperators, new boolean[0]);
         } else {
             BinaryOperator[] subs = new BinaryOperator[binaryOperators.length + 1];
             System.arraycopy(binaryOperators, 0, subs, 0, binaryOperators.length);
