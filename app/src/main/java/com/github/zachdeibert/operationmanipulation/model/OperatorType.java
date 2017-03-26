@@ -38,6 +38,11 @@ public enum OperatorType {
         return null;
     }
 
+    @Override
+    public String toString() {
+        return getOperator().toString();
+    }
+
     OperatorType(Operator operator, int score) {
         this.operator = operator;
         this.score = score;

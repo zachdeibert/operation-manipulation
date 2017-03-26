@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android">
+    <TextView
+        android:id="@+id/added_label"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Added operators:" />
+    <GridView
+        android:id="@+id/added_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/added_label"
+        android:numColumns="auto_fit" />
+    <TextView
+        android:id="@+id/removed_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Removed operators:"
+        android:layout_below="@+id/added_container"
+        android:layout_alignParentStart="true" />
+    <GridView
+        android:id="@+id/removed_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/removed_label"
+        android:numColumns="auto_fit" />
+    <TextView
+        android:id="@+id/textView4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Number of numbers: "
+        android:layout_below="@+id/removed_container"/>
+    <TextView
+        android:id="@+id/num_operands"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/textView4"
+        android:layout_toEndOf="@+id/textView4"
+        android:text="2" />
+    <TextView
+        android:id="@+id/textView5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Score multiplier: "
+        android:layout_below="@+id/textView4" />
+    <TextView
+        android:id="@+id/score_multiplier"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/textView5"
+        android:layout_toEndOf="@+id/textView5"
+        android:text="1" />
+    <Button
+        android:id="@+id/button2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:onClick="chooseLevel"
+        android:text="Play Level" />
+</merge>

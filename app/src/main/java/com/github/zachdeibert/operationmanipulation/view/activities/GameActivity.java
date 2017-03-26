@@ -1,5 +1,6 @@
 package com.github.zachdeibert.operationmanipulation.view.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.app.Activity;
 import android.provider.Settings;
@@ -32,6 +33,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class GameActivity extends Activity {
+    private static final int LEVEL_UP_REQUEST = 42;
     private EquationListLayout equationList;
     private EquationGenerator generator;
     private OperationListView operationList;
@@ -40,6 +42,7 @@ public class GameActivity extends Activity {
     private ScrollView equationContainer;
     private int solvedCorrectly;
     private int solvedIncorrectly;
+    private boolean noAdvancing;
     private boolean loading;
     private AddEquationView addEquationView;
     private InterstitialAd equationAd;
@@ -104,9 +107,37 @@ public class GameActivity extends Activity {
         if (!loading) {
             session.addScore(session.getLevel().getEquationSolvingScore());
             scoreLabel.setText(String.format("Score: %d", session.getScore()));
-            ++solvedCorrectly;
-            if (solvedCorrectly + solvedIncorrectly >= 10 && ((float) solvedCorrectly) / (float) (solvedCorrectly + solvedIncorrectly) >= session.getLevel().getMinimumAdvanceAccuracy()) {
-                session.setLevel(Level.values()[session.getLevel().ordinal() + 1]);
+            if (noAdvancing) {
+                addEquation();
+            } else {
+                ++solvedCorrectly;
+                if (solvedCorrectly + solvedIncorrectly >= 10 && ((float) solvedCorrectly) / (float) (solvedCorrectly + solvedIncorrectly) >= session.getLevel().getMinimumAdvanceAccuracy()) {
+                    Intent intent = new Intent(this, LevelUpActivity.class);
+                    intent.putExtra("PassedLevel", session.getLevel().ordinal());
+                    startActivityForResult(intent, LEVEL_UP_REQUEST);
+                } else {
+                    addEquation();
+                }
+            }
+            DisplayMetrics metrics = new DisplayMetrics();
+            getWindowManager().getDefaultDisplay().getMetrics(metrics);
+            equationContainer.smoothScrollBy(0, metrics.heightPixels / 4);
+        }
+    }
+
+    public void onFailedSolution() {
+        if (!loading) {
+            ++solvedIncorrectly;
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == LEVEL_UP_REQUEST) {
+            if (data == null) {
+                noAdvancing = true;
+            } else {
+                session.setLevel(Level.values()[data.getIntExtra("SelectedLevel", -1)]);
                 loadLevel(session.getLevel());
                 solvedCorrectly = 0;
                 solvedIncorrectly = 0;
@@ -128,18 +159,7 @@ public class GameActivity extends Activity {
                     addEquation();
                 }
                 arrangeAddEquationView();
-            } else {
-                addEquation();
             }
-            DisplayMetrics metrics = new DisplayMetrics();
-            getWindowManager().getDefaultDisplay().getMetrics(metrics);
-            equationContainer.smoothScrollBy(0, metrics.heightPixels / 4);
-        }
-    }
-
-    public void onFailedSolution() {
-        if (!loading) {
-            ++solvedIncorrectly;
         }
     }
 
@@ -147,6 +167,9 @@ public class GameActivity extends Activity {
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putParcelable("GameSession", session);
+        outState.putInt("SolvedCorrectly", solvedCorrectly);
+        outState.putInt("SolvedIncorrectly", solvedIncorrectly);
+        outState.putBoolean("DisableAdvancing", noAdvancing);
     }
 
     @Override
@@ -167,6 +190,7 @@ public class GameActivity extends Activity {
             loadLevel(session.getLevel());
             solvedCorrectly = savedInstanceState.getInt("SolvedCorrectly");
             solvedIncorrectly = savedInstanceState.getInt("SolvedIncorrectly");
+            noAdvancing = savedInstanceState.getBoolean("DisableAdvancing");
         }
         scoreLabel.setText(String.format("Score: %d", session.getScore()));
     }
