@@ -242,6 +242,6 @@ public class EquationGenerator extends Thread {
     public EquationGenerator() {
         random = new Random();
         generatedEquations = new ArrayBlockingQueue<>(QUEUE_SIZE);
-        setLevel(Level.Level1);
+        setLevel(Level.TwoAddition);
     }
 }

@@ -51,7 +51,7 @@ public class GameSession implements Parcelable {
     }
 
     public GameSession() {
-        setLevel(Level.Level1);
+        setLevel(Level.TwoAddition);
         setScore(0);
     }
 

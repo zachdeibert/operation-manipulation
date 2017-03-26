@@ -105,7 +105,7 @@ public class GameActivity extends Activity {
             session.addScore(session.getLevel().getEquationSolvingScore());
             scoreLabel.setText(String.format("Score: %d", session.getScore()));
             ++solvedCorrectly;
-            if (session.getScore() >= session.getLevel().getMinimumAdvancePoints() && ((float) solvedCorrectly) / (float) (solvedCorrectly + solvedIncorrectly) >= session.getLevel().getMinimumAdvanceAccuracy()) {
+            if (solvedCorrectly + solvedIncorrectly >= 10 && ((float) solvedCorrectly) / (float) (solvedCorrectly + solvedIncorrectly) >= session.getLevel().getMinimumAdvanceAccuracy()) {
                 session.setLevel(Level.values()[session.getLevel().ordinal() + 1]);
                 loadLevel(session.getLevel());
                 solvedCorrectly = 0;
