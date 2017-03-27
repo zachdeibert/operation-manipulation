@@ -1,6 +1,7 @@
 package com.github.zachdeibert.operationmanipulation.view.activities;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.app.Activity;
 import android.provider.Settings;
@@ -40,9 +41,6 @@ public class GameActivity extends Activity {
     private GameSession session;
     private TextView scoreLabel;
     private ScrollView equationContainer;
-    private int solvedCorrectly;
-    private int solvedIncorrectly;
-    private boolean noAdvancing;
     private boolean loading;
     private boolean hideSystemUi;
     private AddEquationView addEquationView;
@@ -67,6 +65,7 @@ public class GameActivity extends Activity {
         view.setEquation(equation);
         equationList.addView(view);
         arrangeAddEquationView();
+        session.addEquation(equation);
     }
 
     public boolean isHidingSystemUi() {
@@ -117,17 +116,13 @@ public class GameActivity extends Activity {
         if (!loading) {
             session.addScore(session.getLevel().getEquationSolvingScore());
             scoreLabel.setText(String.format("Score: %d", session.getScore()));
-            if (noAdvancing) {
-                addEquation();
+            session.onSolvedCorrectly();
+            if (session.canAdvance()) {
+                Intent intent = new Intent(this, LevelUpActivity.class);
+                intent.putExtra("PassedLevel", session.getLevel().ordinal());
+                startActivityForResult(intent, LEVEL_UP_REQUEST);
             } else {
-                ++solvedCorrectly;
-                if (solvedCorrectly + solvedIncorrectly >= 10 && ((float) solvedCorrectly) / (float) (solvedCorrectly + solvedIncorrectly) >= session.getLevel().getMinimumAdvanceAccuracy()) {
-                    Intent intent = new Intent(this, LevelUpActivity.class);
-                    intent.putExtra("PassedLevel", session.getLevel().ordinal());
-                    startActivityForResult(intent, LEVEL_UP_REQUEST);
-                } else {
-                    addEquation();
-                }
+                addEquation();
             }
             DisplayMetrics metrics = new DisplayMetrics();
             getWindowManager().getDefaultDisplay().getMetrics(metrics);
@@ -137,20 +132,26 @@ public class GameActivity extends Activity {
 
     public void onFailedSolution() {
         if (!loading) {
-            ++solvedIncorrectly;
+            session.onSolvedIncorrectly();
         }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        SharedPreferences prefs = getSharedPreferences("savedGame", 0);
+        SharedPreferences.Editor editor = prefs.edit();
+        Bundle bundle = new Bundle();
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == LEVEL_UP_REQUEST) {
             if (data == null) {
-                noAdvancing = true;
+                session.setNoAdvancing(true);
             } else {
                 session.setLevel(Level.values()[data.getIntExtra("SelectedLevel", -1)]);
                 loadLevel(session.getLevel());
-                solvedCorrectly = 0;
-                solvedIncorrectly = 0;
                 List<EquationContainer> unsolved = new ArrayList<>();
                 for (int i = 0; i < equationList.getChildCount(); ++i) {
                     View view = equationList.getChildAt(i);
@@ -177,9 +178,6 @@ public class GameActivity extends Activity {
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putParcelable("GameSession", session);
-        outState.putInt("SolvedCorrectly", solvedCorrectly);
-        outState.putInt("SolvedIncorrectly", solvedIncorrectly);
-        outState.putBoolean("DisableAdvancing", noAdvancing);
     }
 
     @Override
@@ -190,17 +188,12 @@ public class GameActivity extends Activity {
             for (int i = 0; i < session.getLevel().getMaximumUnsolvedPuzzles(); ++i) {
                 addEquation();
             }
-            solvedCorrectly = 0;
-            solvedIncorrectly = 0;
         } else if (session == null) {
             session = savedInstanceState.getParcelable("GameSession");
             loading = true;
             super.onRestoreInstanceState(savedInstanceState);
             loading = false;
             loadLevel(session.getLevel());
-            solvedCorrectly = savedInstanceState.getInt("SolvedCorrectly");
-            solvedIncorrectly = savedInstanceState.getInt("SolvedIncorrectly");
-            noAdvancing = savedInstanceState.getBoolean("DisableAdvancing");
         }
         scoreLabel.setText(String.format("Score: %d", session.getScore()));
     }
