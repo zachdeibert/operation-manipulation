@@ -12,6 +12,7 @@ import android.widget.Button;
 
 import com.github.zachdeibert.operationmanipulation.model.Operator;
 import com.github.zachdeibert.operationmanipulation.model.OperatorType;
+import com.github.zachdeibert.operationmanipulation.view.activities.GameActivity;
 
 public class OperatorView extends Button implements View.OnTouchListener {
     private static class SavedState extends BaseSavedState {
@@ -100,6 +101,14 @@ public class OperatorView extends Button implements View.OnTouchListener {
     public boolean onTouch(View v, MotionEvent event) {
         if (event.getAction() == MotionEvent.ACTION_DOWN) {
             v.startDrag(ClipData.newPlainText("", ""), new View.DragShadowBuilder(v), v, 0);
+            final GameActivity activity = (GameActivity) getContext();
+            activity.setHideSystemUi(true);
+            postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    activity.setHideSystemUi(false);
+                }
+            }, 500);
             return true;
         } else {
             return false;
