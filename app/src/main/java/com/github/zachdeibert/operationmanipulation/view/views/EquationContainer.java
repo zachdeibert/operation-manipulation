@@ -1,7 +1,6 @@
 package com.github.zachdeibert.operationmanipulation.view.views;
 
 import android.content.Context;
-import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.graphics.PointF;
 import android.graphics.Rect;
@@ -9,8 +8,6 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.AttributeSet;
 import android.util.Log;
-import android.util.TypedValue;
-import android.view.Choreographer;
 import android.view.DragEvent;
 import android.view.MotionEvent;
 import android.view.View;
@@ -25,6 +22,7 @@ import com.github.zachdeibert.operationmanipulation.model.Operand;
 import com.github.zachdeibert.operationmanipulation.model.Operator;
 import com.github.zachdeibert.operationmanipulation.view.activities.GameActivity;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -32,6 +30,34 @@ import java.util.Map;
 
 public class EquationContainer extends ViewGroup implements View.OnDragListener {
     static class SavedState extends BaseSavedState {
+        private static class Point implements Serializable {
+            private final float x;
+            private final float y;
+
+            private PointF toPoint() {
+                return new PointF(x, y);
+            }
+
+            private Point(PointF pt) {
+                x = pt.x;
+                y = pt.y;
+            }
+        }
+
+        static class SerializableState implements Serializable {
+            private final EquationView.SavedState.SerializableState equationState;
+            private final Map<Operator, Point> operators;
+
+            public SavedState toState() {
+                return new SavedState(equationState.toState(), operators);
+            }
+
+            private SerializableState(SavedState state) {
+                equationState = state.equationState.toSerializable();
+                operators = state.operators;
+            }
+        }
+
         public static final Creator<SavedState> CREATOR = new Creator<SavedState>() {
             @Override
             public SavedState createFromParcel(Parcel source) {
@@ -44,8 +70,8 @@ public class EquationContainer extends ViewGroup implements View.OnDragListener 
             }
         };
 
-        private final Parcelable equationState;
-        private final Map<Operator, PointF> operators;
+        private final EquationView.SavedState equationState;
+        private final Map<Operator, Point> operators;
 
         public void apply(EquationContainer view) {
             view.view.onRestoreInstanceState(equationState);
@@ -53,8 +79,12 @@ public class EquationContainer extends ViewGroup implements View.OnDragListener 
             for (Operator op : operators.keySet()) {
                 OperatorView v = new OperatorView(view.getContext(), null, R.attr.operatorBtnStyle);
                 v.setOperator(op);
-                view.addOperator(v, operators.get(op));
+                view.addOperator(v, operators.get(op).toPoint());
             }
+        }
+
+        public SerializableState toSerializable() {
+            return new SerializableState(this);
         }
 
         @Override
@@ -64,14 +94,20 @@ public class EquationContainer extends ViewGroup implements View.OnDragListener 
             out.writeMap(operators);
         }
 
+        private SavedState(EquationView.SavedState equationState, Map<Operator, Point> operators) {
+            super(EMPTY_STATE);
+            this.equationState = equationState;
+            this.operators = operators;
+        }
+
         private SavedState(Parcelable state, EquationContainer view) {
             super(state);
-            equationState = view.view.onSaveInstanceState();
+            equationState = (EquationView.SavedState) view.view.onSaveInstanceState();
             operators = new HashMap<>();
             for (View v : view.operators.keySet()) {
                 if (v instanceof OperatorView) {
                     OperatorView op = (OperatorView) v;
-                    operators.put(op.getOperator(), view.operators.get(v));
+                    operators.put(op.getOperator(), new Point(view.operators.get(v)));
                 }
             }
         }

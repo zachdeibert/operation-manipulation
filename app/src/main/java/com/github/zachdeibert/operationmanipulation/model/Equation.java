@@ -3,11 +3,12 @@ package com.github.zachdeibert.operationmanipulation.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class Equation implements Parcelable {
+public class Equation implements Parcelable, Serializable {
     public static final Creator<Equation> CREATOR = new Creator<Equation>() {
         @Override
         public Equation createFromParcel(Parcel source) {

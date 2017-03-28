@@ -10,8 +10,24 @@ import android.view.View;
 
 import com.github.zachdeibert.operationmanipulation.model.*;
 
+import java.io.Serializable;
+
 public class EquationView extends View {
     static class SavedState extends BaseSavedState {
+        static class SerializableState implements Serializable {
+            private final Equation equation;
+            private final int backgroundColor;
+
+            public SavedState toState() {
+                return new SavedState(equation, backgroundColor);
+            }
+
+            private SerializableState(SavedState state) {
+                equation = state.equation;
+                backgroundColor = state.backgroundColor;
+            }
+        }
+
         public static final Creator<SavedState> CREATOR = new Creator<SavedState>() {
             @Override
             public SavedState createFromParcel(Parcel source) {
@@ -31,11 +47,21 @@ public class EquationView extends View {
             view.setEquation(equation);
         }
 
+        public SerializableState toSerializable() {
+            return new SerializableState(this);
+        }
+
         @Override
         public void writeToParcel(Parcel out, int flags) {
             super.writeToParcel(out, flags);
             equation.writeToParcel(out, flags);
             out.writeInt(backgroundColor);
+        }
+
+        private SavedState(Equation equation, int backgroundColor) {
+            super(EMPTY_STATE);
+            this.equation = equation;
+            this.backgroundColor = backgroundColor;
         }
 
         private SavedState(Parcelable state, EquationView view) {

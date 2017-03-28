@@ -1,7 +1,6 @@
 package com.github.zachdeibert.operationmanipulation.view.activities;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.app.Activity;
 import android.provider.Settings;
@@ -139,9 +138,8 @@ public class GameActivity extends Activity {
     @Override
     protected void onPause() {
         super.onPause();
-        SharedPreferences prefs = getSharedPreferences("savedGame", 0);
-        SharedPreferences.Editor editor = prefs.edit();
-        Bundle bundle = new Bundle();
+        session.setSerializedEquationContainer(((EquationListLayout.SavedState) equationList.onSaveInstanceState()).toSerializable());
+        session.save(getPreferences(MODE_PRIVATE));
     }
 
     @Override
@@ -182,20 +180,36 @@ public class GameActivity extends Activity {
 
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        loading = true;
         if (savedInstanceState == null) {
-            session = new GameSession();
+            session = GameSession.load(getPreferences(MODE_PRIVATE));
             loadLevel(session.getLevel());
-            for (int i = 0; i < session.getLevel().getMaximumUnsolvedPuzzles(); ++i) {
-                addEquation();
+            if (session.getSerializedEquationContainer() == null) {
+                for (int i = 0; i < session.getLevel().getMaximumUnsolvedPuzzles(); ++i) {
+                    addEquation();
+                }
+            } else {
+                equationList.onRestoreInstanceState(((EquationListLayout.SavedState.SerializableState) session.getSerializedEquationContainer()).toState());
             }
         } else if (session == null) {
             session = savedInstanceState.getParcelable("GameSession");
-            loading = true;
             super.onRestoreInstanceState(savedInstanceState);
-            loading = false;
             loadLevel(session.getLevel());
         }
+        for (int i = 0; i < equationList.getChildCount(); ++i) {
+            final View view = equationList.getChildAt(i);
+            if (view instanceof EquationContainer && !((EquationContainer) view).isSolved()) {
+                equationContainer.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        equationContainer.smoothScrollTo(0, (int) view.getY());
+                    }
+                });
+                break;
+            }
+        }
         scoreLabel.setText(String.format("Score: %d", session.getScore()));
+        loading = false;
     }
 
     @Override

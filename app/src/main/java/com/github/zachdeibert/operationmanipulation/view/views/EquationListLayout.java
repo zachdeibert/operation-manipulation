@@ -11,11 +11,31 @@ import android.widget.LinearLayout;
 import com.github.zachdeibert.operationmanipulation.model.Level;
 import com.github.zachdeibert.operationmanipulation.view.activities.GameActivity;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 public class EquationListLayout extends LinearLayout {
-    private static class SavedState extends BaseSavedState {
+    public static class SavedState extends BaseSavedState {
+        public static class SerializableState implements Serializable {
+            private final List<EquationContainer.SavedState.SerializableState> states;
+
+            public SavedState toState() {
+                List<EquationContainer.SavedState> states = new ArrayList<>();
+                for (EquationContainer.SavedState.SerializableState state : this.states) {
+                    states.add(state.toState());
+                }
+                return new SavedState(states);
+            }
+
+            private SerializableState(SavedState state) {
+                states = new ArrayList<>();
+                for (EquationContainer.SavedState s : state.states) {
+                    states.add(s.toSerializable());
+                }
+            }
+        }
+
         public static final Creator<SavedState> CREATOR = new Creator<SavedState>() {
             @Override
             public SavedState createFromParcel(Parcel source) {
@@ -46,10 +66,19 @@ public class EquationListLayout extends LinearLayout {
             ((GameActivity) view.getContext()).arrangeAddEquationView();
         }
 
+        public SerializableState toSerializable() {
+            return new SerializableState(this);
+        }
+
         @Override
         public void writeToParcel(Parcel out, int flags) {
             super.writeToParcel(out, flags);
             out.writeList(states);
+        }
+
+        private SavedState(List<EquationContainer.SavedState> states) {
+            super(EMPTY_STATE);
+            this.states = states;
         }
 
         private SavedState(Parcelable state, EquationListLayout view) {
@@ -70,12 +99,12 @@ public class EquationListLayout extends LinearLayout {
     }
 
     @Override
-    protected Parcelable onSaveInstanceState() {
+    public Parcelable onSaveInstanceState() {
         return new SavedState(super.onSaveInstanceState(), this);
     }
 
     @Override
-    protected void onRestoreInstanceState(Parcelable state) {
+    public void onRestoreInstanceState(Parcelable state) {
         super.onRestoreInstanceState(state);
         ((SavedState) state).apply(this);
     }
