@@ -4,4 +4,19 @@
     <string name="title_activity_game">Operation Manipulation</string>
     <string name="title_activity_level_up">Level Up!</string>
     <string name="banner_ad_unit_id">ca-app-pub-9531291675030995/2823120468</string>
+    <string name="score_format">Score: %1$d</string>
+    <string name="score_multiplier_format">%1$.2f</string>
+    <string name="level_up">Level Up!</string>
+    <string name="choose_level">Please choose the next level to play:</string>
+    <string name="stay_level">Stay on current level</string>
+    <string name="menu_settings">Settings</string>
+    <string name="menu_play">Play</string>
+    <string name="setting_save_progress">Save Progress</string>
+    <string name="setting_reset_progress">Reset Progress</string>
+    <string name="added_operators">Added operators:</string>
+    <string name="removed_operators">Removed operators:</string>
+    <string name="num_operands">Number of numbers:</string>
+    <string name="score_multiplier">Score multiplier:</string>
+    <string name="play_level">Play Level</string>
+    <string name="integer">%1$d</string>
 </resources>

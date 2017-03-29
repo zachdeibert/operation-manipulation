@@ -16,23 +16,23 @@ public class AddEquationView extends RainbowView implements View.OnTouchListener
         return true;
     }
 
-    private void init(AttributeSet attrs, int defStyleAttr) {
+    private void init() {
         setOnTouchListener(this);
         setText("Get More Equations");
     }
 
     public AddEquationView(Context context) {
         super(context);
-        init(null, 0);
+        init();
     }
 
     public AddEquationView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        init(attrs, 0);
+        init();
     }
 
     public AddEquationView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        init(attrs, defStyleAttr);
+        init();
     }
 }

@@ -81,6 +81,10 @@ public class EquationView extends View {
     private int height;
     private Equation equation;
     private int backgroundColor;
+    private Rect bounds;
+    private Rect inside;
+    private Paint paint;
+    private char[] chars;
 
     public int getBackgroundColor() {
         return backgroundColor;
@@ -97,6 +101,7 @@ public class EquationView extends View {
 
     public void setEquation(Equation equation) {
         this.equation = equation;
+        chars = new char[2 + equation.getOperandCount()];
     }
 
     @Override
@@ -114,20 +119,18 @@ public class EquationView extends View {
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         width = widthMeasureSpec & 0x3FFFFFFF;
         setMeasuredDimension(width, height);
+        inside.right = bounds.right = width;
+        bounds.bottom = height;
+        inside.bottom = height - 5;
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
-        Rect bounds = new Rect(0, 0, width, height);
-        Rect inside = new Rect(0, 5, width, height - 5);
-        Paint paint = new Paint();
         paint.setARGB(255, 0, 0, 0);
         canvas.drawRect(bounds, paint);
         paint.setColor(getBackgroundColor());
         canvas.drawRect(inside, paint);
         paint.setARGB(255, 0, 0, 0);
-        int nChars = 2 + equation.getOperandCount();
-        char[] chars = new char[nChars];
         int i = 0;
         for (ExpressionItem item : equation.getLeftSide()) {
             if (item instanceof Operand) {
@@ -137,11 +140,11 @@ public class EquationView extends View {
         }
         chars[i++] = '=';
         chars[i] = (char) ('0' + equation.getRightSide().getValue());
-        int charWidth = width / nChars;
+        int charWidth = width / chars.length;
         int textSize = height - 20;
         top: while (true) {
             paint.setTextSize(textSize);
-            for (i = 0; i < nChars; ++i) {
+            for (i = 0; i < chars.length; ++i) {
                 int width = (int) paint.measureText(chars, i, 1);
                 if (width >= charWidth / 2) {
                     textSize -= 10;
@@ -150,32 +153,35 @@ public class EquationView extends View {
             }
             break;
         }
-        for (i = 0; i < nChars; ++i) {
+        for (i = 0; i < chars.length; ++i) {
             int width = (int) paint.measureText(chars, i, 1);
             canvas.drawText(chars, i, 1, charWidth * i + (charWidth - width) / 2, (height + textSize) / 2, paint);
         }
     }
 
-    private void init(AttributeSet attrs, int defStyle) {
+    private void init() {
         equation = new Equation();
         DisplayMetrics metrics = new DisplayMetrics();
         ((Activity) getContext()).getWindowManager().getDefaultDisplay().getMetrics(metrics);
         height = metrics.heightPixels / 4;
         setBackgroundColor(0xFFFFFFFF);
+        bounds = new Rect(0, 0, 0, 0);
+        inside = new Rect(0, 0, 0, 0);
+        paint = new Paint();
     }
 
     public EquationView(Context context) {
         super(context);
-        init(null, 0);
+        init();
     }
 
     public EquationView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        init(attrs, 0);
+        init();
     }
 
     public EquationView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
-        init(attrs, defStyle);
+        init();
     }
 }

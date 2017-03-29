@@ -9,6 +9,7 @@ import com.github.zachdeibert.operationmanipulation.model.ExpressionItem;
 import com.github.zachdeibert.operationmanipulation.model.GroupingOperator;
 import com.github.zachdeibert.operationmanipulation.model.Operand;
 import com.github.zachdeibert.operationmanipulation.model.Operator;
+import com.github.zachdeibert.operationmanipulation.model.Operators;
 import com.github.zachdeibert.operationmanipulation.model.UnaryOperator;
 import com.github.zachdeibert.operationmanipulation.model.operators.SubtractionOperator;
 
@@ -30,23 +31,23 @@ public class EquationSolver {
             Object item = expression.get(i);
             if (item instanceof Operator && ((Operator) item).getOrder() == order) {
                 if (item instanceof BinaryOperator) {
-                    Object lhso = i > 0 ? expression.get(i - 1) : null;
-                    Object rhso = expression.get(i + 1);
+                    Object lhsObj = i > 0 ? expression.get(i - 1) : null;
+                    Object rhsObj = expression.get(i + 1);
                     double lhs;
                     double rhs;
-                    if (lhso == null || !(lhso instanceof Double && rhso instanceof Double)) {
-                        if (rhso instanceof SubtractionOperator) {
+                    if (lhsObj == null || !(lhsObj instanceof Double && rhsObj instanceof Double)) {
+                        if (rhsObj instanceof SubtractionOperator) {
                             expression.remove(i + 1);
-                            lhs = (double) lhso;
+                            lhs = (double) lhsObj;
                             rhs = -(double) expression.get(i + 1);
                         } else {
                             expression.remove(i);
-                            expression.set(i, -((double) rhso));
+                            expression.set(i, -((double) rhsObj));
                             continue;
                         }
                     } else {
-                        lhs = (double) lhso;
-                        rhs = (double) rhso;
+                        lhs = (double) lhsObj;
+                        rhs = (double) rhsObj;
                     }
                     double result = ((BinaryOperator) item).run(lhs, rhs);
                     expression.set(i - 1, result);
@@ -87,10 +88,10 @@ public class EquationSolver {
                     double val = ((GroupingOperator) item).run(solve(subexpression.toArray(new ExpressionItem[0])), other);
                     expression.add(i, val);
                     if (i > 0 && !(expression.get(i - 1) instanceof Operator)) {
-                        expression.add(i++, Operator.MULTIPLICATION);
+                        expression.add(i++, Operators.MULTIPLICATION);
                     }
                     if (i < expression.size() - 1 && !(expression.get(i + 1) instanceof Operator)) {
-                        expression.add(++i, Operator.MULTIPLICATION);
+                        expression.add(++i, Operators.MULTIPLICATION);
                     }
                 }
             }
@@ -100,7 +101,7 @@ public class EquationSolver {
         }
     }
 
-    public static double solve(ExpressionItem... expression) {
+    private static double solve(ExpressionItem... expression) {
         int maxOrder = 0;
         List<Object> expr = new LinkedList<>();
         for (ExpressionItem item : expression) {
@@ -115,7 +116,7 @@ public class EquationSolver {
         return (double) expr.get(0);
     }
 
-    public static boolean isComplete(ExpressionItem... expression) {
+    private static boolean isComplete(ExpressionItem... expression) {
         boolean wasOperator = true;
         boolean canUnary = false;
         boolean implicitMultiply = false;
@@ -140,10 +141,12 @@ public class EquationSolver {
                     implicitMultiply = false;
                 }
             } else if (item instanceof UnaryOperator) {
+                //noinspection ConstantConditions
                 if (wasOperator || wasNegate) {
                     parseError("Multiple adjacent operators");
                     return false;
-                } else if (!canUnary) {
+                } else //noinspection ConstantConditions
+                    if (!canUnary) {
                     parseError("Started with an operator");
                     return false;
                 } else {
@@ -194,6 +197,7 @@ public class EquationSolver {
                 }
             }
         }
+        //noinspection ConstantConditions
         if (wasOperator || wasNegate) {
             parseError("Ended with an operator");
             return false;

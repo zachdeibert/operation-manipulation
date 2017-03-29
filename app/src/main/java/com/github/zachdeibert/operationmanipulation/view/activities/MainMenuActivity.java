@@ -8,11 +8,11 @@ import android.view.*;
 import com.github.zachdeibert.operationmanipulation.*;
 
 public class MainMenuActivity extends AppCompatActivity {
-    public void playGame(View v) {
+    public void playGame(@SuppressWarnings("UnusedParameters") View v) {
         startActivity(new Intent(this, GameActivity.class));
     }
 
-    public void showSettings(View v) {
+    public void showSettings(@SuppressWarnings("UnusedParameters") View v) {
         startActivity(new Intent(this, SettingsActivity.class));
     }
 

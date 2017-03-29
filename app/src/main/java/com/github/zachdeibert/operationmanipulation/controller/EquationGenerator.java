@@ -1,6 +1,7 @@
 package com.github.zachdeibert.operationmanipulation.controller;
 
 import android.util.Log;
+import android.util.SparseArray;
 
 import com.github.zachdeibert.operationmanipulation.model.BinaryOperator;
 import com.github.zachdeibert.operationmanipulation.model.Equation;
@@ -8,14 +9,12 @@ import com.github.zachdeibert.operationmanipulation.model.ExpressionItem;
 import com.github.zachdeibert.operationmanipulation.model.GroupingOperator;
 import com.github.zachdeibert.operationmanipulation.model.Level;
 import com.github.zachdeibert.operationmanipulation.model.Operand;
-import com.github.zachdeibert.operationmanipulation.model.Operator;
 import com.github.zachdeibert.operationmanipulation.model.OperatorType;
+import com.github.zachdeibert.operationmanipulation.model.Operators;
 import com.github.zachdeibert.operationmanipulation.model.UnaryOperator;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Queue;
 import java.util.Random;
 import java.util.concurrent.ArrayBlockingQueue;
@@ -27,6 +26,7 @@ public class EquationGenerator extends Thread {
     private OperatorType[] operators;
     private Level level;
     private final Queue<Equation> generatedEquations;
+    private volatile boolean runThread;
 
     private boolean solve(Equation eq, BinaryOperator[] binaryOperators, UnaryOperator[] unaryOperators, boolean[] negate) {
         if (eq.getOperandCount() == negate.length) {
@@ -36,21 +36,19 @@ public class EquationGenerator extends Thread {
                     ++numUnary;
                 }
             }
-            Map<Integer, List<GroupingOperator>> operatorTypes = new HashMap<>();
+            SparseArray<List<GroupingOperator>> operatorTypes = new SparseArray<>();
             for (OperatorType op : getOperators()) {
                 if (op.getOperator() instanceof GroupingOperator) {
                     int type = ((GroupingOperator) op.getOperator()).getType();
-                    List<GroupingOperator> list;
-                    if (operatorTypes.containsKey(type)) {
-                        list = operatorTypes.get(type);
-                    } else {
+                    List<GroupingOperator> list = operatorTypes.get(type);
+                    if (list == null) {
                         list = new ArrayList<>();
                         operatorTypes.put(type, list);
                     }
                     list.add((GroupingOperator) op.getOperator());
                 }
             }
-            if (operatorTypes.isEmpty()) {
+            if (operatorTypes.size() == 0) {
                 eq.clear();
                 int i = 0;
                 for (ExpressionItem item : eq.getLeftSide()) {
@@ -72,7 +70,8 @@ public class EquationGenerator extends Thread {
                     return true;
                 }
             }
-            for (int type : operatorTypes.keySet()) {
+            for (int i = 0; i < operatorTypes.size(); ++i) {
+                int type = operatorTypes.keyAt(i);
                 List<GroupingOperator> list = operatorTypes.get(type);
                 for (int start = 0; start < 2 * eq.getOperandCount() + numUnary - 1; ++start) {
                     for (int end = start + type == 0 ? 3 : 2; end < 2 * eq.getOperandCount() + numUnary; ++end) {
@@ -81,28 +80,28 @@ public class EquationGenerator extends Thread {
                                 for (GroupingOperator endOp : list) {
                                     if (endOp.getLevel() <= 0) {
                                         eq.clear();
-                                        int i = 0;
+                                        int j = 0;
                                         for (ExpressionItem item : eq.getLeftSide()) {
                                             if (item instanceof Operand) {
                                                 ExpressionItem op = item;
-                                                if (unaryOperators[i] != null) {
-                                                    unaryOperators[i] = (UnaryOperator) unaryOperators[i].clone();
-                                                    eq.insertOperatorAfter(op, unaryOperators[i]);
-                                                    op = unaryOperators[i];
+                                                if (unaryOperators[j] != null) {
+                                                    unaryOperators[j] = (UnaryOperator) unaryOperators[j].clone();
+                                                    eq.insertOperatorAfter(op, unaryOperators[j]);
+                                                    op = unaryOperators[j];
                                                 }
-                                                eq.insertOperatorAfter(op, binaryOperators[i++]);
-                                                if (i >= binaryOperators.length) {
+                                                eq.insertOperatorAfter(op, binaryOperators[j++]);
+                                                if (j >= binaryOperators.length) {
                                                     break;
                                                 }
                                             }
                                         }
                                         eq.insertOperatorAt(start, startOp);
                                         eq.insertOperatorAt(end, endOp);
-                                        i = 0;
+                                        j = 0;
                                         for (ExpressionItem item : eq.getLeftSide()) {
                                             if (item instanceof Operand) {
-                                                if (negate[i++]) {
-                                                    eq.insertOperatorBefore(item, Operator.SUBTRACTION);
+                                                if (negate[j++]) {
+                                                    eq.insertOperatorBefore(item, Operators.SUBTRACTION);
                                                 }
                                             }
                                         }
@@ -170,7 +169,7 @@ public class EquationGenerator extends Thread {
         return false;
     }
 
-    public boolean solve(Equation eq) {
+    private boolean solve(Equation eq) {
         try {
             return solve(eq, new UnaryOperator[0]);
         } finally {
@@ -178,7 +177,7 @@ public class EquationGenerator extends Thread {
         }
     }
 
-    public Equation generate() {
+    private Equation generate() {
         Operand[] operands = new Operand[getOperands()];
         int result;
         while (true) {
@@ -203,7 +202,14 @@ public class EquationGenerator extends Thread {
 
     @Override
     public void run() {
-        while (true) {
+        runThread = true;
+        Runtime.getRuntime().addShutdownHook(new Thread() {
+            @Override
+            public void run() {
+                runThread = false;
+            }
+        });
+        while (runThread) {
             Equation eq = null;
             try {
                 if (generatedEquations.size() < QUEUE_SIZE) {
@@ -219,15 +225,15 @@ public class EquationGenerator extends Thread {
         }
     }
 
-    public int getOperands() {
+    private int getOperands() {
         return operands;
     }
 
-    public OperatorType[] getOperators() {
+    private OperatorType[] getOperators() {
         return operators;
     }
 
-    public Level getLevel() {
+    private Level getLevel() {
         return level;
     }
 

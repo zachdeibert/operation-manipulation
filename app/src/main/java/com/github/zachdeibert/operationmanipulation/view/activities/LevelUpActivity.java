@@ -18,7 +18,7 @@ public class LevelUpActivity extends AppCompatActivity {
         finish();
     }
 
-    public void stayOnLevel(View view) {
+    public void stayOnLevel(@SuppressWarnings("UnusedParameters") View view) {
         finish();
     }
 

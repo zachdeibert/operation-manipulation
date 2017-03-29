@@ -3,6 +3,8 @@ package com.github.zachdeibert.operationmanipulation.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.github.zachdeibert.operationmanipulation.util.CollectionUtils;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -30,7 +32,7 @@ public class Equation implements Parcelable, Serializable {
         return lhs.toArray(new ExpressionItem[0]);
     }
 
-    public void setLeftSide(Operand... ops) {
+    private void setLeftSide(Operand... ops) {
         lhs.clear();
         lhs.addAll(Arrays.asList(ops));
         operandCount = ops.length;
@@ -40,7 +42,7 @@ public class Equation implements Parcelable, Serializable {
         return rhs;
     }
 
-    public void setRightSide(Operand rhs) {
+    private void setRightSide(Operand rhs) {
         this.rhs = rhs;
     }
 
@@ -48,7 +50,7 @@ public class Equation implements Parcelable, Serializable {
         return level;
     }
 
-    public void setLevel(Level level) {
+    private void setLevel(Level level) {
         this.level = level;
     }
 
@@ -118,7 +120,7 @@ public class Equation implements Parcelable, Serializable {
     }
 
     private Equation(Parcel parcel) {
-        lhs = parcel.readArrayList(ClassLoader.getSystemClassLoader());
+        lhs = CollectionUtils.checkedAssignment(parcel.readArrayList(ClassLoader.getSystemClassLoader()), ExpressionItem.class);
         rhs = Operand.CREATOR.createFromParcel(parcel);
         level = Level.values()[parcel.readInt()];
     }

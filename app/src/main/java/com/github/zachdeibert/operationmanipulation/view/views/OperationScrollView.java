@@ -35,22 +35,22 @@ public class OperationScrollView extends HorizontalScrollView implements View.On
         return true;
     }
 
-    private void init(AttributeSet attrs, int defStyleAttr) {
+    private void init() {
         setOnDragListener(this);
     }
 
     public OperationScrollView(Context context) {
         super(context);
-        init(null, 0);
+        init();
     }
 
     public OperationScrollView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        init(attrs, 0);
+        init();
     }
 
     public OperationScrollView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        init(attrs, defStyleAttr);
+        init();
     }
 }

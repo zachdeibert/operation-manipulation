@@ -48,13 +48,13 @@ public class LevelView extends RelativeLayout {
             findViewById(R.id.added_label).setVisibility(addedOperators.isEmpty() ? INVISIBLE : VISIBLE);
             removed.setAdapter(new ArrayAdapter<>(getContext(), R.layout.view_operator, removedOperators));
             findViewById(R.id.removed_label).setVisibility(removedOperators.isEmpty() ? INVISIBLE : VISIBLE);
-            ((TextView) findViewById(R.id.score_multiplier)).setText(String.format("%.2f", ((double) nextLevel.getEquationSolvingScore()) / (double) currentLevel.getEquationSolvingScore()));
-            ((TextView) findViewById(R.id.num_operands)).setText(Integer.toString(nextLevel.getNumberOfOperands()));
+            ((TextView) findViewById(R.id.score_multiplier)).setText(getResources().getString(R.string.score_multiplier_format, ((double) nextLevel.getEquationSolvingScore()) / (double) currentLevel.getEquationSolvingScore()));
+            ((TextView) findViewById(R.id.num_operands)).setText(getResources().getString(R.string.integer, nextLevel.getNumberOfOperands()));
             requestLayout();
         }
     }
 
-    public Level getCurrentLevel() {
+    private Level getCurrentLevel() {
         return currentLevel;
     }
 
@@ -72,22 +72,22 @@ public class LevelView extends RelativeLayout {
         updateView();
     }
 
-    private void init(AttributeSet attrs, int defStyleAttr) {
+    private void init() {
         ((LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.view_level, this, true);
     }
 
     public LevelView(Context context) {
         super(context);
-        init(null, 0);
+        init();
     }
 
     public LevelView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        init(attrs, 0);
+        init();
     }
 
     public LevelView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        init(attrs, defStyleAttr);
+        init();
     }
 }

@@ -20,12 +20,11 @@ import com.github.zachdeibert.operationmanipulation.model.Equation;
 import com.github.zachdeibert.operationmanipulation.model.ExpressionItem;
 import com.github.zachdeibert.operationmanipulation.model.Operand;
 import com.github.zachdeibert.operationmanipulation.model.Operator;
+import com.github.zachdeibert.operationmanipulation.util.CollectionUtils;
 import com.github.zachdeibert.operationmanipulation.view.activities.GameActivity;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class EquationContainer extends ViewGroup implements View.OnDragListener {
@@ -115,7 +114,7 @@ public class EquationContainer extends ViewGroup implements View.OnDragListener 
         private SavedState(Parcel parcel) {
             super(parcel);
             equationState = EquationView.SavedState.CREATOR.createFromParcel(parcel);
-            operators = parcel.readHashMap(ClassLoader.getSystemClassLoader());
+            operators = CollectionUtils.checkedAssignment(parcel.readHashMap(ClassLoader.getSystemClassLoader()), Operator.class, Point.class);
         }
     }
 
@@ -160,18 +159,12 @@ public class EquationContainer extends ViewGroup implements View.OnDragListener 
         }
     }
 
-    public boolean isSolved() {
-        return this.view.getBackgroundColor() == 0xFF00FF00;
+    public boolean isUnsolved() {
+        return view.getBackgroundColor() != 0xFF00FF00;
     }
 
-    public void addOperator(OperatorView view, PointF center) {
+    private void addOperator(OperatorView view, PointF center) {
         Equation eq = getEquation();
-        List<Operand> operands = new ArrayList<>();
-        for (ExpressionItem item : eq.getLeftSide()) {
-            if (item instanceof Operand) {
-                operands.add((Operand) item);
-            }
-        }
         if ((center.x * 2 * (2 + eq.getOperandCount()) + 1) / 2 > eq.getOperandCount() + 1) {
             return;
         }
@@ -207,7 +200,7 @@ public class EquationContainer extends ViewGroup implements View.OnDragListener 
         check();
     }
 
-    public void addOperator(OperatorView view, Rect rect) {
+    private void addOperator(OperatorView view, Rect rect) {
         PointF center = new PointF(rect.exactCenterX() / getWidth(), rect.exactCenterY() / getHeight());
         addOperator(view, center);
     }
@@ -271,7 +264,7 @@ public class EquationContainer extends ViewGroup implements View.OnDragListener 
         }
     }
 
-    private void init(AttributeSet attrs, int defStyleAttr) {
+    private void init() {
         operators = new HashMap<>();
         view = new EquationView(getContext());
         addView(view);
@@ -280,16 +273,16 @@ public class EquationContainer extends ViewGroup implements View.OnDragListener 
 
     public EquationContainer(Context context) {
         super(context);
-        init(null, 0);
+        init();
     }
 
     public EquationContainer(Context context, AttributeSet attrs) {
         super(context, attrs);
-        init(attrs, 0);
+        init();
     }
 
     public EquationContainer(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        init(attrs, defStyleAttr);
+        init();
     }
 }

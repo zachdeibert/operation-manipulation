@@ -6,6 +6,8 @@ import android.os.Parcelable;
 import android.util.Base64;
 import android.util.Log;
 
+import com.github.zachdeibert.operationmanipulation.util.CollectionUtils;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -49,7 +51,7 @@ public class GameSession implements Parcelable, Serializable {
         return score;
     }
 
-    public void setScore(int score) {
+    private void setScore(int score) {
         this.score = score;
     }
 
@@ -57,7 +59,7 @@ public class GameSession implements Parcelable, Serializable {
         setScore(getScore() + diff);
     }
 
-    public List<Equation> getEquations() {
+    private List<Equation> getEquations() {
         return equations;
     }
 
@@ -65,11 +67,11 @@ public class GameSession implements Parcelable, Serializable {
         getEquations().add(equation);
     }
 
-    public int getSolvedCorrectly() {
+    private int getSolvedCorrectly() {
         return solvedCorrectly;
     }
 
-    public void setSolvedCorrectly(int solvedCorrectly) {
+    private void setSolvedCorrectly(int solvedCorrectly) {
         this.solvedCorrectly = solvedCorrectly;
     }
 
@@ -77,11 +79,11 @@ public class GameSession implements Parcelable, Serializable {
         setSolvedCorrectly(getSolvedCorrectly() + 1);
     }
 
-    public int getSolvedIncorrectly() {
+    private int getSolvedIncorrectly() {
         return solvedIncorrectly;
     }
 
-    public void setSolvedIncorrectly(int solvedIncorrectly) {
+    private void setSolvedIncorrectly(int solvedIncorrectly) {
         this.solvedIncorrectly = solvedIncorrectly;
     }
 
@@ -89,11 +91,11 @@ public class GameSession implements Parcelable, Serializable {
         setSolvedIncorrectly(getSolvedIncorrectly() + 1);
     }
 
-    public int getTotalSolved() {
+    private int getTotalSolved() {
         return getSolvedCorrectly() + getSolvedIncorrectly();
     }
 
-    public void resetSolvedCounters() {
+    private void resetSolvedCounters() {
         setSolvedCorrectly(0);
         setSolvedIncorrectly(0);
     }
@@ -102,7 +104,7 @@ public class GameSession implements Parcelable, Serializable {
         return settings;
     }
 
-    public void setSettings(GameSettings settings) {
+    private void setSettings(GameSettings settings) {
         this.settings = settings;
     }
 
@@ -227,7 +229,7 @@ public class GameSession implements Parcelable, Serializable {
         getSettings().writeToParcel(dest, flags);
     }
 
-    public GameSession() {
+    private GameSession() {
         setLevel(Level.TwoAddition);
         setScore(0);
         equations = new ArrayList<>();
@@ -237,7 +239,7 @@ public class GameSession implements Parcelable, Serializable {
     private GameSession(Parcel parcel) {
         setLevel(Level.values()[parcel.readInt()]);
         setScore(parcel.readInt());
-        equations = parcel.readArrayList(ClassLoader.getSystemClassLoader());
+        equations = CollectionUtils.checkedAssignment(parcel.readArrayList(ClassLoader.getSystemClassLoader()), Equation.class);
         setSolvedCorrectly(parcel.readInt());
         setSolvedIncorrectly(parcel.readInt());
         setSettings(GameSettings.CREATOR.createFromParcel(parcel));

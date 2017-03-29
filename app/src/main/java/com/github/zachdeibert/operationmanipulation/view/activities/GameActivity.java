@@ -1,5 +1,6 @@
 package com.github.zachdeibert.operationmanipulation.view.activities;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.app.Activity;
@@ -45,11 +46,11 @@ public class GameActivity extends Activity {
     private AddEquationView addEquationView;
     private InterstitialAd equationAd;
 
-    public EquationGenerator getGenerator() {
+    private EquationGenerator getGenerator() {
         return generator;
     }
 
-    public void setGenerator(EquationGenerator generator) {
+    private void setGenerator(EquationGenerator generator) {
         this.generator = generator;
     }
 
@@ -58,7 +59,7 @@ public class GameActivity extends Activity {
         equationList.addView(addEquationView);
     }
 
-    public void addEquation() {
+    private void addEquation() {
         Equation equation = getGenerator().getEquation();
         EquationContainer view = new EquationContainer(this);
         view.setEquation(equation);
@@ -67,7 +68,7 @@ public class GameActivity extends Activity {
         session.addEquation(equation);
     }
 
-    public boolean isHidingSystemUi() {
+    private boolean isHidingSystemUi() {
         return hideSystemUi;
     }
 
@@ -76,18 +77,19 @@ public class GameActivity extends Activity {
         onWindowFocusChanged(true);
     }
 
-    public void loadLevel(Level level) {
+    private void loadLevel(Level level) {
         generator.setLevel(level);
         operationList.loadLevel(level);
     }
 
+    @SuppressLint("HardwareIds")
     private AdRequest getAdRequest() {
         AdRequest.Builder ad = new AdRequest.Builder();
         if (BuildConfig.DEBUG) {
             try {
                 MessageDigest digest = MessageDigest.getInstance("MD5");
                 digest.update(Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID).getBytes());
-                StringBuffer str = new StringBuffer();
+                StringBuilder str = new StringBuilder();
                 for (byte b : digest.digest()) {
                     str.append(String.format("%02X", b));
                 }
@@ -114,7 +116,7 @@ public class GameActivity extends Activity {
     public void onSolvedEquation() {
         if (!loading) {
             session.addScore(session.getLevel().getEquationSolvingScore());
-            scoreLabel.setText(String.format("Score: %d", session.getScore()));
+            scoreLabel.setText(getResources().getString(R.string.score_format, session.getScore()));
             session.onSolvedCorrectly();
             if (session.canAdvance()) {
                 Intent intent = new Intent(this, LevelUpActivity.class);
@@ -155,7 +157,7 @@ public class GameActivity extends Activity {
                     View view = equationList.getChildAt(i);
                     if (view instanceof EquationContainer) {
                         EquationContainer equation = (EquationContainer) equationList.getChildAt(i);
-                        if (!equation.isSolved()) {
+                        if (equation.isUnsolved()) {
                             unsolved.add(equation);
                         }
                     }
@@ -198,7 +200,7 @@ public class GameActivity extends Activity {
         }
         for (int i = 0; i < equationList.getChildCount(); ++i) {
             final View view = equationList.getChildAt(i);
-            if (view instanceof EquationContainer && !((EquationContainer) view).isSolved()) {
+            if (view instanceof EquationContainer && ((EquationContainer) view).isUnsolved()) {
                 equationContainer.post(new Runnable() {
                     @Override
                     public void run() {
@@ -208,7 +210,7 @@ public class GameActivity extends Activity {
                 break;
             }
         }
-        scoreLabel.setText(String.format("Score: %d", session.getScore()));
+        scoreLabel.setText(getResources().getString(R.string.score_format, session.getScore()));
         loading = false;
     }
 

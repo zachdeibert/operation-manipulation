@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.LinearLayout;
 
 import com.github.zachdeibert.operationmanipulation.model.Level;
+import com.github.zachdeibert.operationmanipulation.util.CollectionUtils;
 import com.github.zachdeibert.operationmanipulation.view.activities.GameActivity;
 
 import java.io.Serializable;
@@ -94,7 +95,7 @@ public class EquationListLayout extends LinearLayout {
 
         private SavedState(Parcel parcel) {
             super(parcel);
-            states = parcel.readArrayList(ClassLoader.getSystemClassLoader());
+            states = CollectionUtils.checkedAssignment(parcel.readArrayList(ClassLoader.getSystemClassLoader()), EquationContainer.SavedState.class);
         }
     }
 
@@ -110,12 +111,12 @@ public class EquationListLayout extends LinearLayout {
     }
 
     @Override
-    protected void dispatchSaveInstanceState(SparseArray container) {
+    protected void dispatchSaveInstanceState(SparseArray<Parcelable> container) {
         super.dispatchFreezeSelfOnly(container);
     }
 
     @Override
-    protected void dispatchRestoreInstanceState(SparseArray container) {
+    protected void dispatchRestoreInstanceState(SparseArray<Parcelable> container) {
         super.dispatchThawSelfOnly(container);
     }
 

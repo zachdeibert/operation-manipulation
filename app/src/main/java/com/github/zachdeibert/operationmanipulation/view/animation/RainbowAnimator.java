@@ -3,6 +3,7 @@ package com.github.zachdeibert.operationmanipulation.view.animation;
 import android.animation.Animator;
 import android.animation.TimeInterpolator;
 import android.graphics.Color;
+import android.util.Log;
 import android.view.View;
 
 import java.lang.ref.WeakReference;
@@ -36,9 +37,11 @@ public class RainbowAnimator extends Animator {
                         try {
                             Thread.sleep(Integer.MAX_VALUE);
                         } catch (InterruptedException ex) {
+                            // This is expected to happen
                         }
                     }
                 } catch (NullPointerException ex) {
+                    Log.d("RainbowAnimator", "Garbage collected while animating", ex);
                 }
             }
         };

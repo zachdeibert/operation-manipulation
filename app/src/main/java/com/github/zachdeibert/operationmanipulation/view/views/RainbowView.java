@@ -14,18 +14,18 @@ public class RainbowView extends View {
     private int width;
     private int height;
     private String text;
+    private Paint paint;
 
-    public String getText() {
+    private String getText() {
         return text;
     }
 
-    public void setText(String text) {
+    void setText(String text) {
         this.text = text;
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
-        Paint paint = new Paint();
         paint.setARGB(255, 255, 255, 255);
         int textSize = height - 20;
         int width;
@@ -48,25 +48,26 @@ public class RainbowView extends View {
         setMeasuredDimension(width, height);
     }
 
-    private void init(AttributeSet attrs, int defStyleAttr) {
+    private void init() {
         DisplayMetrics metrics = new DisplayMetrics();
         ((Activity) getContext()).getWindowManager().getDefaultDisplay().getMetrics(metrics);
         height = metrics.heightPixels / 4;
         new RainbowAnimator(this).start();
+        paint = new Paint();
     }
 
     public RainbowView(Context context) {
         super(context);
-        init(null, 0);
+        init();
     }
 
     public RainbowView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        init(attrs, 0);
+        init();
     }
 
     public RainbowView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        init(attrs, defStyleAttr);
+        init();
     }
 }

@@ -4,7 +4,7 @@
         android:id="@+id/added_label"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Added operators:" />
+        android:text="@string/added_operators" />
     <GridView
         android:id="@+id/added_container"
         android:layout_width="match_parent"
@@ -16,7 +16,7 @@
         android:id="@+id/removed_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Removed operators:"
+        android:text="@string/removed_operators"
         android:layout_below="@+id/added_container"
         android:layout_alignParentStart="true" />
     <GridView
@@ -29,28 +29,26 @@
         android:id="@+id/textView4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Number of numbers: "
+        android:text="@string/num_operands"
         android:layout_below="@+id/removed_container"/>
     <TextView
         android:id="@+id/num_operands"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignTop="@+id/textView4"
-        android:layout_toEndOf="@+id/textView4"
-        android:text="2" />
+        android:layout_toEndOf="@+id/textView4" />
     <TextView
         android:id="@+id/textView5"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Score multiplier: "
+        android:text="@string/score_multiplier"
         android:layout_below="@+id/textView4" />
     <TextView
         android:id="@+id/score_multiplier"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignTop="@+id/textView5"
-        android:layout_toEndOf="@+id/textView5"
-        android:text="1" />
+        android:layout_toEndOf="@+id/textView5" />
     <Button
         android:id="@+id/button2"
         android:layout_width="wrap_content"
@@ -58,5 +56,5 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
         android:onClick="chooseLevel"
-        android:text="Play Level" />
+        android:text="@string/play_level" />
 </merge>

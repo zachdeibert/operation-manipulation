@@ -4,16 +4,16 @@ import android.os.Parcel;
 
 import com.github.zachdeibert.operationmanipulation.model.GroupingOperator;
 
-public class AbsoltueValueOperator extends GroupingOperator {
-    public static final Creator<AbsoltueValueOperator> CREATOR = new Creator<AbsoltueValueOperator>() {
+public class AbsoluteValueOperator extends GroupingOperator {
+    public static final Creator<AbsoluteValueOperator> CREATOR = new Creator<AbsoluteValueOperator>() {
         @Override
-        public AbsoltueValueOperator createFromParcel(Parcel source) {
-            return new AbsoltueValueOperator();
+        public AbsoluteValueOperator createFromParcel(Parcel source) {
+            return new AbsoluteValueOperator();
         }
 
         @Override
-        public AbsoltueValueOperator[] newArray(int size) {
-            return new AbsoltueValueOperator[size];
+        public AbsoluteValueOperator[] newArray(int size) {
+            return new AbsoluteValueOperator[size];
         }
     };
 
@@ -32,7 +32,7 @@ public class AbsoltueValueOperator extends GroupingOperator {
         return 0;
     }
 
-    public AbsoltueValueOperator() {
+    public AbsoluteValueOperator() {
         super(1);
     }
 }

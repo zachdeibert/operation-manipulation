@@ -4,17 +4,18 @@ import android.content.ClipData;
 import android.content.Context;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.v7.widget.AppCompatButton;
 import android.util.AttributeSet;
 import android.view.DragEvent;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.Button;
 
 import com.github.zachdeibert.operationmanipulation.model.Operator;
 import com.github.zachdeibert.operationmanipulation.model.OperatorType;
+import com.github.zachdeibert.operationmanipulation.util.DeprecatedApis;
 import com.github.zachdeibert.operationmanipulation.view.activities.GameActivity;
 
-public class OperatorView extends Button implements View.OnTouchListener {
+public class OperatorView extends AppCompatButton implements View.OnTouchListener {
     private static class SavedState extends BaseSavedState {
         public static final Creator<SavedState> CREATOR = new Creator<SavedState>() {
             @Override
@@ -100,7 +101,7 @@ public class OperatorView extends Button implements View.OnTouchListener {
     @Override
     public boolean onTouch(View v, MotionEvent event) {
         if (event.getAction() == MotionEvent.ACTION_DOWN) {
-            v.startDrag(ClipData.newPlainText("", ""), new View.DragShadowBuilder(v), v, 0);
+            DeprecatedApis.startDrag(v, ClipData.newPlainText("", ""), new View.DragShadowBuilder(v), v, 0);
             final GameActivity activity = (GameActivity) getContext();
             activity.setHideSystemUi(true);
             postDelayed(new Runnable() {
@@ -115,22 +116,22 @@ public class OperatorView extends Button implements View.OnTouchListener {
         }
     }
 
-    private void init(AttributeSet attrs, int defStyle) {
+    private void init() {
         setOnTouchListener(this);
     }
 
     public OperatorView(Context context) {
         super(context);
-        init(null, 0);
+        init();
     }
 
     public OperatorView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        init(attrs, 0);
+        init();
     }
 
     public OperatorView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
-        init(attrs, defStyle);
+        init();
     }
 }
