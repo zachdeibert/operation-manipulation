@@ -77,11 +77,13 @@ public class GameSettings implements Parcelable, Serializable {
         SharedPreferences.Editor editor = prefs.edit();
         editor.putString("GameSettings", Base64.encodeToString(data, 0));
         editor.apply();
+        Log.d("GameSettings", "Saved settings");
     }
 
     public static GameSettings load(SharedPreferences prefs) {
         String str = prefs.getString("GameSettings", null);
         if (str == null) {
+            Log.d("GameSession", "No settings found");
             return new GameSettings();
         } else {
             ByteArrayInputStream buffer = null;

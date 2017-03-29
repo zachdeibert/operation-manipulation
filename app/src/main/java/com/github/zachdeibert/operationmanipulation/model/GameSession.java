@@ -34,7 +34,7 @@ public class GameSession implements Parcelable, Serializable {
     private int solvedCorrectly;
     private int solvedIncorrectly;
     private Serializable serializedEquationContainer;
-    private GameSettings settings;
+    private transient GameSettings settings;
 
     public Level getLevel() {
         return level;
@@ -158,6 +158,7 @@ public class GameSession implements Parcelable, Serializable {
             SharedPreferences.Editor editor = prefs.edit();
             editor.putString("GameSession", Base64.encodeToString(data, 0));
             editor.apply();
+            Log.d("GameSettings", "Saved game");
         } else {
             reset(prefs);
         }
@@ -165,9 +166,10 @@ public class GameSession implements Parcelable, Serializable {
 
     public static GameSession load(SharedPreferences prefs) {
         String str = prefs.getString("GameSession", null);
-        GameSession blank = new GameSession();
-        blank.setSettings(GameSettings.load(prefs));
         if (str == null) {
+            Log.d("GameSession", "No game found");
+            GameSession blank = new GameSession();
+            blank.setSettings(GameSettings.load(prefs));
             return blank;
         } else {
             ByteArrayInputStream buffer = null;
@@ -177,13 +179,19 @@ public class GameSession implements Parcelable, Serializable {
                 stream = new ObjectInputStream(buffer);
                 Object obj = stream.readObject();
                 if (obj instanceof GameSession) {
-                    return (GameSession) obj;
+                    GameSession session = (GameSession) obj;
+                    session.setSettings(GameSettings.load(prefs));
+                    return session;
                 } else {
                     Log.w("GameSession", "Invalid serialized type");
+                    GameSession blank = new GameSession();
+                    blank.setSettings(GameSettings.load(prefs));
                     return blank;
                 }
             } catch (Exception ex) {
                 Log.w("GameSession", "Unable to load game", ex);
+                GameSession blank = new GameSession();
+                blank.setSettings(GameSettings.load(prefs));
                 return blank;
             } finally {
                 if (stream != null) {

@@ -15,11 +15,10 @@ import com.github.zachdeibert.operationmanipulation.model.GameSettings;
 public class SettingsActivity extends Activity implements View.OnTouchListener, CompoundButton.OnCheckedChangeListener {
     private CheckBox saveProgress;
     private Button resetProgress;
+    private CheckBox noAdvancing;
     private GameSettings settings;
 
-    @Override
-    protected void onPause() {
-        super.onPause();
+    private void save() {
         settings.save(getSharedPreferences("SavedState", MODE_PRIVATE));
     }
 
@@ -29,10 +28,13 @@ public class SettingsActivity extends Activity implements View.OnTouchListener, 
         setContentView(R.layout.activity_settings);
         saveProgress = (CheckBox) findViewById(R.id.save_progress);
         resetProgress = (Button) findViewById(R.id.reset_progress);
+        noAdvancing = (CheckBox) findViewById(R.id.no_advancing);
         settings = GameSettings.load(getSharedPreferences("SavedState", MODE_PRIVATE));
         saveProgress.setChecked(settings.isSavingProgress());
+        noAdvancing.setChecked(settings.isNotAdvancing());
         saveProgress.setOnCheckedChangeListener(this);
         resetProgress.setOnTouchListener(this);
+        noAdvancing.setOnCheckedChangeListener(this);
         onCheckedChanged(saveProgress, settings.isSavingProgress());
     }
 
@@ -40,7 +42,10 @@ public class SettingsActivity extends Activity implements View.OnTouchListener, 
     public boolean onTouch(final View v, final MotionEvent event) {
         if (v == resetProgress) {
             GameSession.reset(getSharedPreferences("SavedState", MODE_PRIVATE));
+        } else {
+            return false;
         }
+        save();
         return false;
     }
 
@@ -52,6 +57,11 @@ public class SettingsActivity extends Activity implements View.OnTouchListener, 
             if (!isChecked) {
                 onTouch(resetProgress, null);
             }
+        } else if (buttonView == noAdvancing) {
+            settings.setNoAdvancing(isChecked);
+        } else {
+            return;
         }
+        save();
     }
 }

@@ -12,9 +12,9 @@
             android:id="@+id/save_progress"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Save Progress"
             android:layout_alignParentEnd="true"
-            android:layout_alignParentStart="true" />
+            android:layout_alignParentStart="true"
+            android:text="Save Progress" />
         <Button
             android:id="@+id/reset_progress"
             android:layout_width="wrap_content"
@@ -23,5 +23,12 @@
             android:layout_alignParentStart="true"
             android:layout_below="@+id/save_progress"
             android:text="Reset Progress" />
+        <CheckBox
+            android:id="@+id/no_advancing"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/reset_progress"
+            android:text="Stay on Current Level" />
     </RelativeLayout>
 </android.support.v4.widget.NestedScrollView>
