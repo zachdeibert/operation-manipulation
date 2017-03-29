@@ -33,8 +33,8 @@ public class GameSession implements Parcelable, Serializable {
     private final List<Equation> equations;
     private int solvedCorrectly;
     private int solvedIncorrectly;
-    private boolean noAdvancing;
     private Serializable serializedEquationContainer;
+    private GameSettings settings;
 
     public Level getLevel() {
         return level;
@@ -98,16 +98,16 @@ public class GameSession implements Parcelable, Serializable {
         setSolvedIncorrectly(0);
     }
 
-    public boolean isNotAdvancing() {
-        return noAdvancing;
+    public GameSettings getSettings() {
+        return settings;
     }
 
-    public void setNoAdvancing(boolean noAdvancing) {
-        this.noAdvancing = noAdvancing;
+    public void setSettings(GameSettings settings) {
+        this.settings = settings;
     }
 
     public boolean canAdvance() {
-        return !isNotAdvancing() && getTotalSolved() >= 10 && ((float) getSolvedCorrectly()) / (float) getTotalSolved() >= getLevel().getMinimumAdvanceAccuracy();
+        return !getSettings().isNotAdvancing() && getTotalSolved() >= 10 && ((float) getSolvedCorrectly()) / (float) getTotalSolved() >= getLevel().getMinimumAdvanceAccuracy();
     }
 
     public Serializable getSerializedEquationContainer() {
@@ -118,44 +118,57 @@ public class GameSession implements Parcelable, Serializable {
         this.serializedEquationContainer = serializedEquationContainer;
     }
 
-    public void save(SharedPreferences prefs) {
-        byte[] data;
-        ByteArrayOutputStream buffer = null;
-        ObjectOutputStream stream = null;
-        try {
-            buffer = new ByteArrayOutputStream();
-            stream = new ObjectOutputStream(buffer);
-            stream.writeObject(this);
-            stream.flush();
-            data = buffer.toByteArray();
-        } catch (IOException ex) {
-            Log.w("GameSession", "Unable to save game", ex);
-            return;
-        } finally {
-            if (stream != null) {
-                try {
-                    stream.close();
-                } catch (IOException ex) {
-                    Log.w("GameSession", "Error closing stream", ex);
-                }
-            }
-            if (buffer != null) {
-                try {
-                    buffer.close();
-                } catch (IOException ex) {
-                    Log.w("GameSession", "Error closing stream", ex);
-                }
-            }
-        }
+    public static void reset(SharedPreferences prefs) {
         SharedPreferences.Editor editor = prefs.edit();
-        editor.putString("GameSession", Base64.encodeToString(data, 0));
+        editor.remove("GameSession");
         editor.apply();
+    }
+
+    public void save(SharedPreferences prefs) {
+        getSettings().save(prefs);
+        if (getSettings().isSavingProgress()) {
+            byte[] data;
+            ByteArrayOutputStream buffer = null;
+            ObjectOutputStream stream = null;
+            try {
+                buffer = new ByteArrayOutputStream();
+                stream = new ObjectOutputStream(buffer);
+                stream.writeObject(this);
+                stream.flush();
+                data = buffer.toByteArray();
+            } catch (IOException ex) {
+                Log.w("GameSession", "Unable to save game", ex);
+                return;
+            } finally {
+                if (stream != null) {
+                    try {
+                        stream.close();
+                    } catch (IOException ex) {
+                        Log.w("GameSession", "Error closing stream", ex);
+                    }
+                }
+                if (buffer != null) {
+                    try {
+                        buffer.close();
+                    } catch (IOException ex) {
+                        Log.w("GameSession", "Error closing stream", ex);
+                    }
+                }
+            }
+            SharedPreferences.Editor editor = prefs.edit();
+            editor.putString("GameSession", Base64.encodeToString(data, 0));
+            editor.apply();
+        } else {
+            reset(prefs);
+        }
     }
 
     public static GameSession load(SharedPreferences prefs) {
         String str = prefs.getString("GameSession", null);
+        GameSession blank = new GameSession();
+        blank.setSettings(GameSettings.load(prefs));
         if (str == null) {
-            return new GameSession();
+            return blank;
         } else {
             ByteArrayInputStream buffer = null;
             ObjectInputStream stream = null;
@@ -167,11 +180,11 @@ public class GameSession implements Parcelable, Serializable {
                     return (GameSession) obj;
                 } else {
                     Log.w("GameSession", "Invalid serialized type");
-                    return new GameSession();
+                    return blank;
                 }
             } catch (Exception ex) {
                 Log.w("GameSession", "Unable to load game", ex);
-                return new GameSession();
+                return blank;
             } finally {
                 if (stream != null) {
                     try {
@@ -203,13 +216,14 @@ public class GameSession implements Parcelable, Serializable {
         dest.writeList(getEquations());
         dest.writeInt(getSolvedCorrectly());
         dest.writeInt(getSolvedIncorrectly());
-        dest.writeByte((byte) (isNotAdvancing() ? 1 : 0));
+        getSettings().writeToParcel(dest, flags);
     }
 
     public GameSession() {
         setLevel(Level.TwoAddition);
         setScore(0);
         equations = new ArrayList<>();
+        settings = new GameSettings();
     }
 
     private GameSession(Parcel parcel) {
@@ -218,6 +232,6 @@ public class GameSession implements Parcelable, Serializable {
         equations = parcel.readArrayList(ClassLoader.getSystemClassLoader());
         setSolvedCorrectly(parcel.readInt());
         setSolvedIncorrectly(parcel.readInt());
-        setNoAdvancing(parcel.readByte() == 1);
+        setSettings(GameSettings.CREATOR.createFromParcel(parcel));
     }
 }

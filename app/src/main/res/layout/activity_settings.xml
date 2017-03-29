@@ -5,4 +5,23 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.github.zachdeibert.operationmanipulation.view.activities.SettingsActivity">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <CheckBox
+            android:id="@+id/save_progress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Save Progress"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentStart="true" />
+        <Button
+            android:id="@+id/reset_progress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/save_progress"
+            android:text="Reset Progress" />
+    </RelativeLayout>
 </android.support.v4.widget.NestedScrollView>

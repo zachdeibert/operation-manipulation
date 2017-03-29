@@ -139,14 +139,14 @@ public class GameActivity extends Activity {
     protected void onPause() {
         super.onPause();
         session.setSerializedEquationContainer(((EquationListLayout.SavedState) equationList.onSaveInstanceState()).toSerializable());
-        session.save(getPreferences(MODE_PRIVATE));
+        session.save(getSharedPreferences("SavedState", MODE_PRIVATE));
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == LEVEL_UP_REQUEST) {
             if (data == null) {
-                session.setNoAdvancing(true);
+                session.getSettings().setNoAdvancing(true);
             } else {
                 session.setLevel(Level.values()[data.getIntExtra("SelectedLevel", -1)]);
                 loadLevel(session.getLevel());
@@ -182,7 +182,7 @@ public class GameActivity extends Activity {
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         loading = true;
         if (savedInstanceState == null) {
-            session = GameSession.load(getPreferences(MODE_PRIVATE));
+            session = GameSession.load(getSharedPreferences("SavedState", MODE_PRIVATE));
             loadLevel(session.getLevel());
             if (session.getSerializedEquationContainer() == null) {
                 for (int i = 0; i < session.getLevel().getMaximumUnsolvedPuzzles(); ++i) {
