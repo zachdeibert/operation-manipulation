@@ -1,5 +1,6 @@
 package com.github.zachdeibert.operationmanipulation.controller;
 
+import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.github.zachdeibert.operationmanipulation.BuildConfig;
@@ -26,7 +27,7 @@ public class EquationSolver {
         }
     }
 
-    private static void solve(List<Object> expression, int order) {
+    private static void solve(@NonNull List<Object> expression, int order) {
         for (int i = 0; i < expression.size(); ++i) {
             Object item = expression.get(i);
             if (item instanceof Operator && ((Operator) item).getOrder() == order) {
@@ -101,7 +102,7 @@ public class EquationSolver {
         }
     }
 
-    private static double solve(ExpressionItem... expression) {
+    private static double solve(@NonNull ExpressionItem... expression) {
         int maxOrder = 0;
         List<Object> expr = new LinkedList<>();
         for (ExpressionItem item : expression) {
@@ -116,7 +117,7 @@ public class EquationSolver {
         return (double) expr.get(0);
     }
 
-    private static boolean isComplete(ExpressionItem... expression) {
+    private static boolean isComplete(@NonNull ExpressionItem... expression) {
         boolean wasOperator = true;
         boolean canUnary = false;
         boolean implicitMultiply = false;
@@ -206,11 +207,11 @@ public class EquationSolver {
         }
     }
 
-    public static boolean isComplete(Equation equation) {
+    public static boolean isComplete(@NonNull Equation equation) {
         return isComplete(equation.getLeftSide());
     }
 
-    public static boolean isCorrect(Equation equation) {
+    public static boolean isCorrect(@NonNull Equation equation) {
         double left = solve(equation.getLeftSide());
         double right = equation.getRightSide().getValue();
         return left == right && !Double.isNaN(left);

@@ -1,14 +1,18 @@
 package com.github.zachdeibert.operationmanipulation.model;
 
 import android.os.Parcel;
+import android.support.annotation.NonNull;
 
 public class Operand extends ExpressionItem {
+    @NonNull
     public static final Creator<Operand> CREATOR = new Creator<Operand>() {
+        @NonNull
         @Override
-        public Operand createFromParcel(Parcel source) {
+        public Operand createFromParcel(@NonNull Parcel source) {
             return new Operand(source);
         }
 
+        @NonNull
         @Override
         public Operand[] newArray(int size) {
             return new Operand[size];
@@ -32,7 +36,7 @@ public class Operand extends ExpressionItem {
     }
 
     @Override
-    public void writeToParcel(Parcel dest, int flags) {
+    public void writeToParcel(@NonNull Parcel dest, int flags) {
         dest.writeInt(value);
     }
 
@@ -40,7 +44,7 @@ public class Operand extends ExpressionItem {
         this.value = value;
     }
 
-    private Operand(Parcel parcel) {
+    private Operand(@NonNull Parcel parcel) {
         this.value = parcel.readInt();
     }
 }

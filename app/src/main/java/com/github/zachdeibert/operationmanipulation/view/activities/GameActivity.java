@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.app.Activity;
 import android.provider.Settings;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
@@ -38,6 +40,7 @@ public class GameActivity extends Activity {
     private EquationListLayout equationList;
     private EquationGenerator generator;
     private OperationListView operationList;
+    @Nullable
     private GameSession session;
     private TextView scoreLabel;
     private ScrollView equationContainer;
@@ -65,7 +68,9 @@ public class GameActivity extends Activity {
         view.setEquation(equation);
         equationList.addView(view);
         arrangeAddEquationView();
-        session.addEquation(equation);
+        if (session != null) {
+            session.addEquation(equation);
+        }
     }
 
     private boolean isHidingSystemUi() {
@@ -77,7 +82,7 @@ public class GameActivity extends Activity {
         onWindowFocusChanged(true);
     }
 
-    private void loadLevel(Level level) {
+    private void loadLevel(@NonNull Level level) {
         generator.setLevel(level);
         operationList.loadLevel(level);
     }
@@ -114,7 +119,7 @@ public class GameActivity extends Activity {
     }
 
     public void onSolvedEquation() {
-        if (!loading) {
+        if (!loading && session != null) {
             session.addScore(session.getLevel().getEquationSolvingScore());
             scoreLabel.setText(getResources().getString(R.string.score_format, session.getScore()));
             session.onSolvedCorrectly();
@@ -132,7 +137,7 @@ public class GameActivity extends Activity {
     }
 
     public void onFailedSolution() {
-        if (!loading) {
+        if (!loading && session != null) {
             session.onSolvedIncorrectly();
         }
     }
@@ -140,13 +145,15 @@ public class GameActivity extends Activity {
     @Override
     protected void onPause() {
         super.onPause();
-        session.setSerializedEquationContainer(((EquationListLayout.SavedState) equationList.onSaveInstanceState()).toSerializable());
-        session.save(getSharedPreferences("SavedState", MODE_PRIVATE));
+        if (session != null) {
+            session.setSerializedEquationContainer(((EquationListLayout.SavedState) equationList.onSaveInstanceState()).toSerializable());
+            session.save(getSharedPreferences("SavedState", MODE_PRIVATE));
+        }
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == LEVEL_UP_REQUEST) {
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        if (requestCode == LEVEL_UP_REQUEST && session != null) {
             if (data == null) {
                 session.getSettings().setNoAdvancing(true);
             } else {
@@ -175,13 +182,13 @@ public class GameActivity extends Activity {
     }
 
     @Override
-    protected void onSaveInstanceState(Bundle outState) {
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putParcelable("GameSession", session);
     }
 
     @Override
-    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+    protected void onRestoreInstanceState(@Nullable Bundle savedInstanceState) {
         loading = true;
         if (savedInstanceState == null) {
             session = GameSession.load(getSharedPreferences("SavedState", MODE_PRIVATE));
@@ -196,7 +203,11 @@ public class GameActivity extends Activity {
         } else if (session == null) {
             session = savedInstanceState.getParcelable("GameSession");
             super.onRestoreInstanceState(savedInstanceState);
-            loadLevel(session.getLevel());
+            if (session == null) {
+                Log.e("GameActivity", "State saved without a session");
+            } else {
+                loadLevel(session.getLevel());
+            }
         }
         for (int i = 0; i < equationList.getChildCount(); ++i) {
             final View view = equationList.getChildAt(i);

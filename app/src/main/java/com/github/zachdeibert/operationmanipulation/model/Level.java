@@ -1,5 +1,7 @@
 package com.github.zachdeibert.operationmanipulation.model;
 
+import android.support.annotation.NonNull;
+
 public enum Level {
     FiveAllFactorial(5, 2, 2, OperatorType.ADDITION, OperatorType.SUBTRACTION, OperatorType.MULTIPLICATION, OperatorType.DIVISION, OperatorType.EXPONENT, OperatorType.FACTORIAL),
 
@@ -54,6 +56,7 @@ public enum Level {
     private final int equationScore;
     private final float minimumAdvanceAccuracy;
     private final Level[] nextLevels;
+    @NonNull
     private final OperatorType[] operators;
 
     public int getNumberOfOperands() {
@@ -76,11 +79,12 @@ public enum Level {
         return nextLevels;
     }
 
+    @NonNull
     public OperatorType[] getAllowedOperators() {
         return operators;
     }
 
-    Level(int numOperands, int unsolvedAmount, float minimumAdvanceAccuracy, Level[] nextLevels, OperatorType... operators) {
+    Level(int numOperands, int unsolvedAmount, float minimumAdvanceAccuracy, Level[] nextLevels, @NonNull OperatorType... operators) {
         this.numOperands = numOperands;
         this.unsolvedAmount = unsolvedAmount;
         int operatorScore = 0;

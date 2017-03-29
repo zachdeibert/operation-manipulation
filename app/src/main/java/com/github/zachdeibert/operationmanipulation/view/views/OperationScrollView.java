@@ -1,6 +1,7 @@
 package com.github.zachdeibert.operationmanipulation.view.views;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.util.AttributeSet;
 import android.view.DragEvent;
 import android.view.View;
@@ -11,7 +12,7 @@ public class OperationScrollView extends HorizontalScrollView implements View.On
     private int scrollX;
 
     @Override
-    public boolean onDrag(View v, DragEvent event) {
+    public boolean onDrag(View v, @NonNull DragEvent event) {
         OperatorView view = (OperatorView) event.getLocalState();
         ViewGroup owner = (ViewGroup) view.getParent();
         if (event.getAction() == DragEvent.ACTION_DROP) {

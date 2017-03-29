@@ -1,6 +1,7 @@
 package com.github.zachdeibert.operationmanipulation.util;
 
 import android.content.ClipData;
+import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.View;
 
@@ -8,6 +9,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 public class DeprecatedApis {
+    @Nullable
     private static final Method startDrag = resolveStartDrag();
 
     private static Method resolveStartDrag() {

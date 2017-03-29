@@ -5,6 +5,7 @@ import android.content.Context;
 import android.graphics.*;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
 import android.util.*;
 import android.view.View;
 
@@ -18,22 +19,26 @@ public class EquationView extends View {
             private final Equation equation;
             private final int backgroundColor;
 
+            @NonNull
             public SavedState toState() {
                 return new SavedState(equation, backgroundColor);
             }
 
-            private SerializableState(SavedState state) {
+            private SerializableState(@NonNull SavedState state) {
                 equation = state.equation;
                 backgroundColor = state.backgroundColor;
             }
         }
 
+        @NonNull
         public static final Creator<SavedState> CREATOR = new Creator<SavedState>() {
+            @NonNull
             @Override
-            public SavedState createFromParcel(Parcel source) {
+            public SavedState createFromParcel(@NonNull Parcel source) {
                 return new SavedState(source);
             }
 
+            @NonNull
             @Override
             public SavedState[] newArray(int size) {
                 return new SavedState[size];
@@ -43,16 +48,17 @@ public class EquationView extends View {
         private final Equation equation;
         private final int backgroundColor;
 
-        public void apply(EquationView view) {
+        public void apply(@NonNull EquationView view) {
             view.setEquation(equation);
         }
 
+        @NonNull
         public SerializableState toSerializable() {
             return new SerializableState(this);
         }
 
         @Override
-        public void writeToParcel(Parcel out, int flags) {
+        public void writeToParcel(@NonNull Parcel out, int flags) {
             super.writeToParcel(out, flags);
             equation.writeToParcel(out, flags);
             out.writeInt(backgroundColor);
@@ -64,13 +70,13 @@ public class EquationView extends View {
             this.backgroundColor = backgroundColor;
         }
 
-        private SavedState(Parcelable state, EquationView view) {
+        private SavedState(Parcelable state, @NonNull EquationView view) {
             super(state);
             equation = view.getEquation();
             backgroundColor = view.getBackgroundColor();
         }
 
-        private SavedState(Parcel parcel) {
+        private SavedState(@NonNull Parcel parcel) {
             super(parcel);
             equation = Equation.CREATOR.createFromParcel(parcel);
             backgroundColor = parcel.readInt();
@@ -99,18 +105,19 @@ public class EquationView extends View {
         return equation;
     }
 
-    public void setEquation(Equation equation) {
+    public void setEquation(@NonNull Equation equation) {
         this.equation = equation;
         chars = new char[2 + equation.getOperandCount()];
     }
 
+    @NonNull
     @Override
     protected Parcelable onSaveInstanceState() {
         return new SavedState(super.onSaveInstanceState(), this);
     }
 
     @Override
-    protected void onRestoreInstanceState(Parcelable state) {
+    protected void onRestoreInstanceState(@NonNull Parcelable state) {
         super.onRestoreInstanceState(state);
         ((SavedState) state).apply(this);
     }
@@ -125,7 +132,7 @@ public class EquationView extends View {
     }
 
     @Override
-    protected void onDraw(Canvas canvas) {
+    protected void onDraw(@NonNull Canvas canvas) {
         paint.setARGB(255, 0, 0, 0);
         canvas.drawRect(bounds, paint);
         paint.setColor(getBackgroundColor());

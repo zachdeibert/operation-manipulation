@@ -3,6 +3,7 @@ package com.github.zachdeibert.operationmanipulation.view.views;
 import android.content.Context;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
 import android.util.AttributeSet;
 import android.widget.LinearLayout;
 
@@ -16,21 +17,25 @@ import java.util.List;
 
 public class OperationListView extends LinearLayout {
     private static class SavedState extends BaseSavedState {
+        @NonNull
         public static final Creator<SavedState> CREATOR = new Creator<SavedState>() {
+            @NonNull
             @Override
-            public SavedState createFromParcel(Parcel source) {
+            public SavedState createFromParcel(@NonNull Parcel source) {
                 return new SavedState(source);
             }
 
+            @NonNull
             @Override
             public SavedState[] newArray(int size) {
                 return new SavedState[size];
             }
         };
 
+        @NonNull
         private final List<OperatorType> operators;
 
-        private void apply(OperationListView view) {
+        private void apply(@NonNull OperationListView view) {
             view.removeAllViews();
             for (OperatorType op : operators) {
                 OperatorView v = new OperatorView(view.getContext(), null, R.attr.operatorBtnStyle);
@@ -40,12 +45,12 @@ public class OperationListView extends LinearLayout {
         }
 
         @Override
-        public void writeToParcel(Parcel out, int flags) {
+        public void writeToParcel(@NonNull Parcel out, int flags) {
             super.writeToParcel(out, flags);
             out.writeList(operators);
         }
 
-        private SavedState(Parcelable state, OperationListView view) {
+        private SavedState(Parcelable state, @NonNull OperationListView view) {
             super(state);
             operators = new ArrayList<>();
             for (int i = 0; i < view.getChildCount(); ++i) {
@@ -54,13 +59,13 @@ public class OperationListView extends LinearLayout {
             }
         }
 
-        private SavedState(Parcel parcel) {
+        private SavedState(@NonNull Parcel parcel) {
             super(parcel);
             operators = CollectionUtils.checkedAssignment(parcel.readArrayList(ClassLoader.getSystemClassLoader()), OperatorType.class);
         }
     }
 
-    public void loadLevel(Level level) {
+    public void loadLevel(@NonNull Level level) {
         removeAllViews();
         for (OperatorType op : level.getAllowedOperators()) {
             OperatorView view = new OperatorView(getContext(), null, R.attr.operatorBtnStyle);
@@ -69,13 +74,14 @@ public class OperationListView extends LinearLayout {
         }
     }
 
+    @NonNull
     @Override
     protected Parcelable onSaveInstanceState() {
         return new SavedState(super.onSaveInstanceState(), this);
     }
 
     @Override
-    protected void onRestoreInstanceState(Parcelable state) {
+    protected void onRestoreInstanceState(@NonNull Parcelable state) {
         super.onRestoreInstanceState(state);
         ((SavedState) state).apply(this);
     }

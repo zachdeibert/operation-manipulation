@@ -30,7 +30,7 @@ public enum OperatorType {
         return score;
     }
 
-    public static @NonNull OperatorType valueOf(Operator operator) {
+    public static @NonNull OperatorType valueOf(@NonNull Operator operator) {
         for (OperatorType type : values()) {
             if (type.getOperator().getClass() == operator.getClass()) {
                 return type;

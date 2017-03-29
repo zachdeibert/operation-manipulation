@@ -1,17 +1,21 @@
 package com.github.zachdeibert.operationmanipulation.model.operators;
 
 import android.os.Parcel;
+import android.support.annotation.NonNull;
 
 import com.github.zachdeibert.operationmanipulation.model.GroupingOperator;
 import com.github.zachdeibert.operationmanipulation.model.Side;
 
 public class ParenthesisOperator extends GroupingOperator {
+    @NonNull
     public static final Creator<ParenthesisOperator> CREATOR = new Creator<ParenthesisOperator>() {
+        @NonNull
         @Override
-        public ParenthesisOperator createFromParcel(Parcel source) {
+        public ParenthesisOperator createFromParcel(@NonNull Parcel source) {
             return new ParenthesisOperator(Side.values()[source.readInt()]);
         }
 
+        @NonNull
         @Override
         public ParenthesisOperator[] newArray(int size) {
             return new ParenthesisOperator[size];
@@ -21,10 +25,11 @@ public class ParenthesisOperator extends GroupingOperator {
     private final Side side;
 
     @Override
-    public void writeToParcel(Parcel dest, int flags) {
+    public void writeToParcel(@NonNull Parcel dest, int flags) {
         dest.writeInt(side.ordinal());
     }
 
+    @NonNull
     @Override
     public String toString() {
         return side == Side.Left ? "(" : ")";

@@ -3,6 +3,7 @@ package com.github.zachdeibert.operationmanipulation.model;
 import android.content.SharedPreferences;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
 import android.util.Base64;
 import android.util.Log;
 
@@ -14,12 +15,15 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 
 public class GameSettings implements Parcelable, Serializable {
+    @NonNull
     public static final Creator<GameSettings> CREATOR = new Creator<GameSettings>() {
+        @NonNull
         @Override
-        public GameSettings createFromParcel(Parcel in) {
+        public GameSettings createFromParcel(@NonNull Parcel in) {
             return new GameSettings(in);
         }
 
+        @NonNull
         @Override
         public GameSettings[] newArray(int size) {
             return new GameSettings[size];
@@ -45,7 +49,7 @@ public class GameSettings implements Parcelable, Serializable {
         this.saveProgress = saveProgress;
     }
 
-    public void save(SharedPreferences prefs) {
+    public void save(@NonNull SharedPreferences prefs) {
         byte[] data;
         ByteArrayOutputStream buffer = null;
         ObjectOutputStream stream = null;
@@ -80,7 +84,8 @@ public class GameSettings implements Parcelable, Serializable {
         Log.d("GameSettings", "Saved settings");
     }
 
-    public static GameSettings load(SharedPreferences prefs) {
+    @NonNull
+    public static GameSettings load(@NonNull SharedPreferences prefs) {
         String str = prefs.getString("GameSettings", null);
         if (str == null) {
             Log.d("GameSession", "No settings found");
@@ -126,12 +131,12 @@ public class GameSettings implements Parcelable, Serializable {
     }
 
     @Override
-    public void writeToParcel(Parcel dest, int flags) {
+    public void writeToParcel(@NonNull Parcel dest, int flags) {
         dest.writeByte((byte) (isNotAdvancing() ? 1 : 0));
         dest.writeByte((byte) (isSavingProgress() ? 1 : 0));
     }
 
-    private GameSettings(Parcel in) {
+    private GameSettings(@NonNull Parcel in) {
         setNoAdvancing(in.readByte() == 1);
         setSaveProgress(in.readByte() == 1);
     }

@@ -2,6 +2,7 @@ package com.github.zachdeibert.operationmanipulation.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
 
 import com.github.zachdeibert.operationmanipulation.util.CollectionUtils;
 
@@ -11,28 +12,33 @@ import java.util.Arrays;
 import java.util.List;
 
 public class Equation implements Parcelable, Serializable {
+    @NonNull
     public static final Creator<Equation> CREATOR = new Creator<Equation>() {
+        @NonNull
         @Override
-        public Equation createFromParcel(Parcel source) {
+        public Equation createFromParcel(@NonNull Parcel source) {
             return new Equation(source);
         }
 
+        @NonNull
         @Override
         public Equation[] newArray(int size) {
             return new Equation[size];
         }
     };
 
+    @NonNull
     private final List<ExpressionItem> lhs;
     private int operandCount;
     private Operand rhs;
     private Level level;
 
+    @NonNull
     public ExpressionItem[] getLeftSide() {
         return lhs.toArray(new ExpressionItem[0]);
     }
 
-    private void setLeftSide(Operand... ops) {
+    private void setLeftSide(@NonNull Operand... ops) {
         lhs.clear();
         lhs.addAll(Arrays.asList(ops));
         operandCount = ops.length;
@@ -84,6 +90,7 @@ public class Equation implements Parcelable, Serializable {
         lhs.remove(operator);
     }
 
+    @NonNull
     @Override
     public String toString() {
         StringBuilder str = new StringBuilder();
@@ -102,7 +109,7 @@ public class Equation implements Parcelable, Serializable {
     }
 
     @Override
-    public void writeToParcel(Parcel dest, int flags) {
+    public void writeToParcel(@NonNull Parcel dest, int flags) {
         dest.writeList(lhs);
         getRightSide().writeToParcel(dest, flags);
         dest.writeInt(getLevel().ordinal());
@@ -119,7 +126,7 @@ public class Equation implements Parcelable, Serializable {
         setRightSide(rhs);
     }
 
-    private Equation(Parcel parcel) {
+    private Equation(@NonNull Parcel parcel) {
         lhs = CollectionUtils.checkedAssignment(parcel.readArrayList(ClassLoader.getSystemClassLoader()), ExpressionItem.class);
         rhs = Operand.CREATOR.createFromParcel(parcel);
         level = Level.values()[parcel.readInt()];

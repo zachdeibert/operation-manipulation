@@ -1,13 +1,15 @@
 package com.github.zachdeibert.operationmanipulation.util;
 
+import android.support.annotation.NonNull;
 import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
 public class CollectionUtils {
+    @NonNull
     @SuppressWarnings("unchecked")
-    public static <T> ArrayList<T> checkedAssignment(ArrayList list, Class<T> cls) {
+    public static <T> ArrayList<T> checkedAssignment(@NonNull ArrayList list, @NonNull Class<T> cls) {
         ArrayList<T> realList = new ArrayList<>();
         for (Object obj : list) {
             if (cls.isAssignableFrom(obj.getClass())) {
@@ -19,8 +21,9 @@ public class CollectionUtils {
         return realList;
     }
 
+    @NonNull
     @SuppressWarnings("unchecked")
-    public static <K, V> HashMap<K, V> checkedAssignment(HashMap map, Class<K> clsK, Class<V> clsV) {
+    public static <K, V> HashMap<K, V> checkedAssignment(@NonNull HashMap map, @NonNull Class<K> clsK, @NonNull Class<V> clsV) {
         HashMap<K, V> realMap = new HashMap<>();
         for (Object key : map.keySet()) {
             if (clsK.isAssignableFrom(key.getClass())) {

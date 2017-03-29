@@ -1,5 +1,6 @@
 package com.github.zachdeibert.operationmanipulation.controller;
 
+import android.support.annotation.NonNull;
 import android.util.Log;
 import android.util.SparseArray;
 
@@ -21,14 +22,16 @@ import java.util.concurrent.ArrayBlockingQueue;
 
 public class EquationGenerator extends Thread {
     private static final int QUEUE_SIZE = 3;
+    @NonNull
     private final Random random;
     private int operands;
     private OperatorType[] operators;
     private Level level;
+    @NonNull
     private final Queue<Equation> generatedEquations;
     private volatile boolean runThread;
 
-    private boolean solve(Equation eq, BinaryOperator[] binaryOperators, UnaryOperator[] unaryOperators, boolean[] negate) {
+    private boolean solve(@NonNull Equation eq, @NonNull BinaryOperator[] binaryOperators, @NonNull UnaryOperator[] unaryOperators, @NonNull boolean[] negate) {
         if (eq.getOperandCount() == negate.length) {
             int numUnary = 0;
             for (UnaryOperator op : unaryOperators) {
@@ -129,7 +132,7 @@ public class EquationGenerator extends Thread {
         }
     }
 
-    private boolean solve(Equation eq, BinaryOperator[] binaryOperators, UnaryOperator[] unaryOperators) {
+    private boolean solve(@NonNull Equation eq, @NonNull BinaryOperator[] binaryOperators, @NonNull UnaryOperator[] unaryOperators) {
         if (eq.getOperandCount() == binaryOperators.length + 1) {
             return solve(eq, binaryOperators, unaryOperators, new boolean[0]);
         } else {
@@ -147,7 +150,7 @@ public class EquationGenerator extends Thread {
         }
     }
 
-    private boolean solve(Equation eq, UnaryOperator[] unaryOperators) {
+    private boolean solve(@NonNull Equation eq, @NonNull UnaryOperator[] unaryOperators) {
         if (eq.getOperandCount() == unaryOperators.length) {
             return solve(eq, new BinaryOperator[0], unaryOperators);
         } else {
@@ -169,7 +172,7 @@ public class EquationGenerator extends Thread {
         return false;
     }
 
-    private boolean solve(Equation eq) {
+    private boolean solve(@NonNull Equation eq) {
         try {
             return solve(eq, new UnaryOperator[0]);
         } finally {
@@ -177,6 +180,7 @@ public class EquationGenerator extends Thread {
         }
     }
 
+    @NonNull
     private Equation generate() {
         Operand[] operands = new Operand[getOperands()];
         int result;
@@ -192,12 +196,10 @@ public class EquationGenerator extends Thread {
         }
     }
 
+    @NonNull
     public Equation getEquation() {
-        if (generatedEquations.size() > 0) {
-            return generatedEquations.poll();
-        } else {
-            return generate();
-        }
+        Equation eq = generatedEquations.poll();
+        return eq == null ? generate() : eq;
     }
 
     @Override
@@ -237,7 +239,7 @@ public class EquationGenerator extends Thread {
         return level;
     }
 
-    public void setLevel(Level level) {
+    public void setLevel(@NonNull Level level) {
         this.level = level;
         this.operands = level.getNumberOfOperands();
         this.operators = level.getAllowedOperators();

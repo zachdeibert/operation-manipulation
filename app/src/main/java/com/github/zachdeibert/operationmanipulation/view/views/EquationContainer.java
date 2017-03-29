@@ -6,6 +6,7 @@ import android.graphics.PointF;
 import android.graphics.Rect;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.DragEvent;
@@ -33,36 +34,42 @@ public class EquationContainer extends ViewGroup implements View.OnDragListener 
             private final float x;
             private final float y;
 
+            @NonNull
             private PointF toPoint() {
                 return new PointF(x, y);
             }
 
-            private Point(PointF pt) {
+            private Point(@NonNull PointF pt) {
                 x = pt.x;
                 y = pt.y;
             }
         }
 
         static class SerializableState implements Serializable {
+            @NonNull
             private final EquationView.SavedState.SerializableState equationState;
             private final Map<Operator, Point> operators;
 
+            @NonNull
             public SavedState toState() {
                 return new SavedState(equationState.toState(), operators);
             }
 
-            private SerializableState(SavedState state) {
+            private SerializableState(@NonNull SavedState state) {
                 equationState = state.equationState.toSerializable();
                 operators = state.operators;
             }
         }
 
+        @NonNull
         public static final Creator<SavedState> CREATOR = new Creator<SavedState>() {
+            @NonNull
             @Override
-            public SavedState createFromParcel(Parcel source) {
+            public SavedState createFromParcel(@NonNull Parcel source) {
                 return new SavedState(source);
             }
 
+            @NonNull
             @Override
             public SavedState[] newArray(int size) {
                 return new SavedState[0];
@@ -72,7 +79,7 @@ public class EquationContainer extends ViewGroup implements View.OnDragListener 
         private final EquationView.SavedState equationState;
         private final Map<Operator, Point> operators;
 
-        public void apply(EquationContainer view) {
+        public void apply(@NonNull EquationContainer view) {
             view.view.onRestoreInstanceState(equationState);
             view.view.getEquation().clear();
             for (Operator op : operators.keySet()) {
@@ -82,12 +89,13 @@ public class EquationContainer extends ViewGroup implements View.OnDragListener 
             }
         }
 
+        @NonNull
         public SerializableState toSerializable() {
             return new SerializableState(this);
         }
 
         @Override
-        public void writeToParcel(Parcel out, int flags) {
+        public void writeToParcel(@NonNull Parcel out, int flags) {
             super.writeToParcel(out, flags);
             equationState.writeToParcel(out, flags);
             out.writeMap(operators);
@@ -99,7 +107,7 @@ public class EquationContainer extends ViewGroup implements View.OnDragListener 
             this.operators = operators;
         }
 
-        private SavedState(Parcelable state, EquationContainer view) {
+        private SavedState(Parcelable state, @NonNull EquationContainer view) {
             super(state);
             equationState = (EquationView.SavedState) view.view.onSaveInstanceState();
             operators = new HashMap<>();
@@ -111,7 +119,7 @@ public class EquationContainer extends ViewGroup implements View.OnDragListener 
             }
         }
 
-        private SavedState(Parcel parcel) {
+        private SavedState(@NonNull Parcel parcel) {
             super(parcel);
             equationState = EquationView.SavedState.CREATOR.createFromParcel(parcel);
             operators = CollectionUtils.checkedAssignment(parcel.readHashMap(ClassLoader.getSystemClassLoader()), Operator.class, Point.class);
@@ -125,7 +133,7 @@ public class EquationContainer extends ViewGroup implements View.OnDragListener 
         return view.getEquation();
     }
 
-    public void setEquation(Equation equation) {
+    public void setEquation(@NonNull Equation equation) {
         view.setEquation(equation);
     }
 
@@ -163,7 +171,7 @@ public class EquationContainer extends ViewGroup implements View.OnDragListener 
         return view.getBackgroundColor() != 0xFF00FF00;
     }
 
-    private void addOperator(OperatorView view, PointF center) {
+    private void addOperator(@NonNull OperatorView view, @NonNull PointF center) {
         Equation eq = getEquation();
         if ((center.x * 2 * (2 + eq.getOperandCount()) + 1) / 2 > eq.getOperandCount() + 1) {
             return;
@@ -200,31 +208,32 @@ public class EquationContainer extends ViewGroup implements View.OnDragListener 
         check();
     }
 
-    private void addOperator(OperatorView view, Rect rect) {
+    private void addOperator(@NonNull OperatorView view, @NonNull Rect rect) {
         PointF center = new PointF(rect.exactCenterX() / getWidth(), rect.exactCenterY() / getHeight());
         addOperator(view, center);
     }
 
-    public void removeOperator(OperatorView view) {
+    public void removeOperator(@NonNull OperatorView view) {
         operators.remove(view);
         removeView(view);
         getEquation().removeOperator(view.getOperator());
         check();
     }
 
+    @NonNull
     @Override
     protected Parcelable onSaveInstanceState() {
         return new SavedState(super.onSaveInstanceState(), this);
     }
 
     @Override
-    protected void onRestoreInstanceState(Parcelable state) {
+    protected void onRestoreInstanceState(@NonNull Parcelable state) {
         super.onRestoreInstanceState(state);
         ((SavedState) state).apply(this);
     }
 
     @Override
-    public boolean onDrag(View v, DragEvent event) {
+    public boolean onDrag(View v, @NonNull DragEvent event) {
         if (event.getAction() == DragEvent.ACTION_DROP) {
             OperatorView view = (OperatorView) event.getLocalState();
             ViewGroup owner = (ViewGroup) view.getParent();

@@ -1,6 +1,7 @@
 package com.github.zachdeibert.operationmanipulation.view.activities;
 
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -11,7 +12,7 @@ import com.github.zachdeibert.operationmanipulation.model.Level;
 import com.github.zachdeibert.operationmanipulation.view.views.LevelView;
 
 public class LevelUpActivity extends AppCompatActivity {
-    public void chooseLevel(View view) {
+    public void chooseLevel(@NonNull View view) {
         Intent intent = new Intent();
         intent.putExtra("SelectedLevel", ((LevelView) view.getParent()).getNextLevel().ordinal());
         setResult(RESULT_OK, intent);

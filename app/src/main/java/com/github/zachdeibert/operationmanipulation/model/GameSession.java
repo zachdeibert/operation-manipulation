@@ -3,6 +3,7 @@ package com.github.zachdeibert.operationmanipulation.model;
 import android.content.SharedPreferences;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
 import android.util.Base64;
 import android.util.Log;
 
@@ -18,12 +19,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class GameSession implements Parcelable, Serializable {
+    @NonNull
     public static final Creator<GameSession> CREATOR = new Creator<GameSession>() {
+        @NonNull
         @Override
-        public GameSession createFromParcel(Parcel in) {
+        public GameSession createFromParcel(@NonNull Parcel in) {
             return new GameSession(in);
         }
 
+        @NonNull
         @Override
         public GameSession[] newArray(int size) {
             return new GameSession[size];
@@ -32,6 +36,7 @@ public class GameSession implements Parcelable, Serializable {
 
     private Level level;
     private int score;
+    @NonNull
     private final List<Equation> equations;
     private int solvedCorrectly;
     private int solvedIncorrectly;
@@ -59,11 +64,12 @@ public class GameSession implements Parcelable, Serializable {
         setScore(getScore() + diff);
     }
 
+    @NonNull
     private List<Equation> getEquations() {
         return equations;
     }
 
-    public void addEquation(Equation equation) {
+    public void addEquation(@NonNull Equation equation) {
         getEquations().add(equation);
     }
 
@@ -120,13 +126,13 @@ public class GameSession implements Parcelable, Serializable {
         this.serializedEquationContainer = serializedEquationContainer;
     }
 
-    public static void reset(SharedPreferences prefs) {
+    public static void reset(@NonNull SharedPreferences prefs) {
         SharedPreferences.Editor editor = prefs.edit();
         editor.remove("GameSession");
         editor.apply();
     }
 
-    public void save(SharedPreferences prefs) {
+    public void save(@NonNull SharedPreferences prefs) {
         getSettings().save(prefs);
         if (getSettings().isSavingProgress()) {
             byte[] data;
@@ -166,7 +172,8 @@ public class GameSession implements Parcelable, Serializable {
         }
     }
 
-    public static GameSession load(SharedPreferences prefs) {
+    @NonNull
+    public static GameSession load(@NonNull SharedPreferences prefs) {
         String str = prefs.getString("GameSession", null);
         if (str == null) {
             Log.d("GameSession", "No game found");
@@ -220,7 +227,7 @@ public class GameSession implements Parcelable, Serializable {
     }
 
     @Override
-    public void writeToParcel(Parcel dest, int flags) {
+    public void writeToParcel(@NonNull Parcel dest, int flags) {
         dest.writeInt(getLevel().ordinal());
         dest.writeInt(getScore());
         dest.writeList(getEquations());
@@ -236,7 +243,7 @@ public class GameSession implements Parcelable, Serializable {
         settings = new GameSettings();
     }
 
-    private GameSession(Parcel parcel) {
+    private GameSession(@NonNull Parcel parcel) {
         setLevel(Level.values()[parcel.readInt()]);
         setScore(parcel.readInt());
         equations = CollectionUtils.checkedAssignment(parcel.readArrayList(ClassLoader.getSystemClassLoader()), Equation.class);

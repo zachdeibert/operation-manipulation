@@ -1,6 +1,7 @@
 package com.github.zachdeibert.operationmanipulation.model;
 
 import android.os.Parcel;
+import android.support.annotation.NonNull;
 import android.util.Log;
 
 public abstract class Operator extends ExpressionItem implements Cloneable {
@@ -19,6 +20,7 @@ public abstract class Operator extends ExpressionItem implements Cloneable {
         return order;
     }
 
+    @NonNull
     @Override
     public Operator clone() {
         try {

@@ -4,6 +4,8 @@ import android.content.ClipData;
 import android.content.Context;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.AppCompatButton;
 import android.util.AttributeSet;
 import android.view.DragEvent;
@@ -17,12 +19,15 @@ import com.github.zachdeibert.operationmanipulation.view.activities.GameActivity
 
 public class OperatorView extends AppCompatButton implements View.OnTouchListener {
     private static class SavedState extends BaseSavedState {
+        @NonNull
         public static final Creator<SavedState> CREATOR = new Creator<SavedState>() {
+            @NonNull
             @Override
-            public SavedState createFromParcel(Parcel source) {
+            public SavedState createFromParcel(@NonNull Parcel source) {
                 return new SavedState(source);
             }
 
+            @NonNull
             @Override
             public SavedState[] newArray(int size) {
                 return new SavedState[size];
@@ -31,22 +36,22 @@ public class OperatorView extends AppCompatButton implements View.OnTouchListene
 
         private final Operator operator;
 
-        private void apply(OperatorView view) {
+        private void apply(@NonNull OperatorView view) {
             view.setOperator(operator);
         }
 
         @Override
-        public void writeToParcel(Parcel out, int flags) {
+        public void writeToParcel(@NonNull Parcel out, int flags) {
             super.writeToParcel(out, flags);
             out.writeInt(OperatorType.valueOf(operator).ordinal());
         }
 
-        private SavedState(Parcelable state, OperatorView view) {
+        private SavedState(Parcelable state, @NonNull OperatorView view) {
             super(state);
             operator = view.getOperator();
         }
 
-        private SavedState(Parcel parcel) {
+        private SavedState(@NonNull Parcel parcel) {
             super(parcel);
             operator = OperatorType.values()[parcel.readInt()].getOperator();
         }
@@ -60,7 +65,7 @@ public class OperatorView extends AppCompatButton implements View.OnTouchListene
         return operator;
     }
 
-    public void setOperator(Operator operator) {
+    public void setOperator(@NonNull Operator operator) {
         this.operator = operator;
         setText(operator.toString());
     }
@@ -73,7 +78,7 @@ public class OperatorView extends AppCompatButton implements View.OnTouchListene
         return startDragY;
     }
 
-    public void setStartDragEvent(DragEvent event) {
+    public void setStartDragEvent(@Nullable DragEvent event) {
         if (event == null) {
             startDragX = 0;
             startDragY = 0;
@@ -87,19 +92,20 @@ public class OperatorView extends AppCompatButton implements View.OnTouchListene
         setOperator(getOperator().clone());
     }
 
+    @NonNull
     @Override
     public Parcelable onSaveInstanceState() {
         return new SavedState(super.onSaveInstanceState(), this);
     }
 
     @Override
-    public void onRestoreInstanceState(Parcelable state) {
+    public void onRestoreInstanceState(@NonNull Parcelable state) {
         super.onRestoreInstanceState(state);
         ((SavedState) state).apply(this);
     }
 
     @Override
-    public boolean onTouch(View v, MotionEvent event) {
+    public boolean onTouch(View v, @NonNull MotionEvent event) {
         if (event.getAction() == MotionEvent.ACTION_DOWN) {
             DeprecatedApis.startDrag(v, ClipData.newPlainText("", ""), new View.DragShadowBuilder(v), v, 0);
             final GameActivity activity = (GameActivity) getContext();
@@ -120,17 +126,17 @@ public class OperatorView extends AppCompatButton implements View.OnTouchListene
         setOnTouchListener(this);
     }
 
-    public OperatorView(Context context) {
+    public OperatorView(@NonNull Context context) {
         super(context);
         init();
     }
 
-    public OperatorView(Context context, AttributeSet attrs) {
+    public OperatorView(@NonNull Context context, AttributeSet attrs) {
         super(context, attrs);
         init();
     }
 
-    public OperatorView(Context context, AttributeSet attrs, int defStyle) {
+    public OperatorView(@NonNull Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         init();
     }

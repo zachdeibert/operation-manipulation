@@ -3,6 +3,7 @@ package com.github.zachdeibert.operationmanipulation.view.views;
 import android.content.Context;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
 import android.util.AttributeSet;
 import android.util.SparseArray;
 import android.view.View;
@@ -19,8 +20,10 @@ import java.util.List;
 public class EquationListLayout extends LinearLayout {
     public static class SavedState extends BaseSavedState {
         public static class SerializableState implements Serializable {
+            @NonNull
             private final List<EquationContainer.SavedState.SerializableState> states;
 
+            @NonNull
             public SavedState toState() {
                 List<EquationContainer.SavedState> states = new ArrayList<>();
                 for (EquationContainer.SavedState.SerializableState state : this.states) {
@@ -29,7 +32,7 @@ public class EquationListLayout extends LinearLayout {
                 return new SavedState(states);
             }
 
-            private SerializableState(SavedState state) {
+            private SerializableState(@NonNull SavedState state) {
                 states = new ArrayList<>();
                 for (EquationContainer.SavedState s : state.states) {
                     states.add(s.toSerializable());
@@ -37,12 +40,15 @@ public class EquationListLayout extends LinearLayout {
             }
         }
 
+        @NonNull
         public static final Creator<SavedState> CREATOR = new Creator<SavedState>() {
+            @NonNull
             @Override
-            public SavedState createFromParcel(Parcel source) {
+            public SavedState createFromParcel(@NonNull Parcel source) {
                 return new SavedState(source);
             }
 
+            @NonNull
             @Override
             public SavedState[] newArray(int size) {
                 return new SavedState[size];
@@ -51,7 +57,7 @@ public class EquationListLayout extends LinearLayout {
 
         private final List<EquationContainer.SavedState> states;
 
-        private void apply(EquationListLayout view) {
+        private void apply(@NonNull EquationListLayout view) {
             Level level = null;
             for (EquationContainer.SavedState state : states) {
                 EquationContainer equationView = new EquationContainer(view.getContext());
@@ -67,12 +73,13 @@ public class EquationListLayout extends LinearLayout {
             ((GameActivity) view.getContext()).arrangeAddEquationView();
         }
 
+        @NonNull
         public SerializableState toSerializable() {
             return new SerializableState(this);
         }
 
         @Override
-        public void writeToParcel(Parcel out, int flags) {
+        public void writeToParcel(@NonNull Parcel out, int flags) {
             super.writeToParcel(out, flags);
             out.writeList(states);
         }
@@ -82,7 +89,7 @@ public class EquationListLayout extends LinearLayout {
             this.states = states;
         }
 
-        private SavedState(Parcelable state, EquationListLayout view) {
+        private SavedState(Parcelable state, @NonNull EquationListLayout view) {
             super(state);
             states = new ArrayList<>();
             for (int i = 0; i < view.getChildCount(); ++i) {
@@ -93,19 +100,20 @@ public class EquationListLayout extends LinearLayout {
             }
         }
 
-        private SavedState(Parcel parcel) {
+        private SavedState(@NonNull Parcel parcel) {
             super(parcel);
             states = CollectionUtils.checkedAssignment(parcel.readArrayList(ClassLoader.getSystemClassLoader()), EquationContainer.SavedState.class);
         }
     }
 
+    @NonNull
     @Override
     public Parcelable onSaveInstanceState() {
         return new SavedState(super.onSaveInstanceState(), this);
     }
 
     @Override
-    public void onRestoreInstanceState(Parcelable state) {
+    public void onRestoreInstanceState(@NonNull Parcelable state) {
         super.onRestoreInstanceState(state);
         ((SavedState) state).apply(this);
     }

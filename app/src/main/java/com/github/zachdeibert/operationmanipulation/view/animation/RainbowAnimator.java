@@ -3,13 +3,17 @@ package com.github.zachdeibert.operationmanipulation.view.animation;
 import android.animation.Animator;
 import android.animation.TimeInterpolator;
 import android.graphics.Color;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.View;
 
 import java.lang.ref.WeakReference;
 
 public class RainbowAnimator extends Animator {
+    @NonNull
     private final WeakReference<View> view;
+    @Nullable
     private Thread thread;
     private float hue;
     private long lastFrame;
@@ -31,7 +35,7 @@ public class RainbowAnimator extends Animator {
                             @Override
                             public void run() {
                                 view.get().setBackgroundColor(Color.HSVToColor(new float[] { hue, 1, 1 }));
-                                thread.interrupt();
+                                interrupt();
                             }
                         });
                         try {
@@ -58,6 +62,7 @@ public class RainbowAnimator extends Animator {
         throw new UnsupportedOperationException();
     }
 
+    @NonNull
     @Override
     public Animator setDuration(long duration) {
         throw new UnsupportedOperationException();
