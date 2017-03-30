@@ -8,7 +8,6 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.DragEvent;
 import android.view.MotionEvent;
 import android.view.View;
@@ -22,6 +21,7 @@ import com.github.zachdeibert.operationmanipulation.model.ExpressionItem;
 import com.github.zachdeibert.operationmanipulation.model.Operand;
 import com.github.zachdeibert.operationmanipulation.model.Operator;
 import com.github.zachdeibert.operationmanipulation.util.CollectionUtils;
+import com.github.zachdeibert.operationmanipulation.util.Log;
 import com.github.zachdeibert.operationmanipulation.view.activities.GameActivity;
 
 import java.io.Serializable;

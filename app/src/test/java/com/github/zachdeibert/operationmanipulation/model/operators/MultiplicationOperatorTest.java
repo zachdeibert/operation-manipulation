@@ -6,6 +6,7 @@ import com.github.zachdeibert.operationmanipulation.model.Operator;
 import com.github.zachdeibert.operationmanipulation.model.Operators;
 
 public class MultiplicationOperatorTest extends AbstractBinaryOperatorTest<MultiplicationOperator> {
+    @NonNull
     @Override
     protected Operator[] mustEvaluateBefore() {
         return new Operator[] {
@@ -14,6 +15,7 @@ public class MultiplicationOperatorTest extends AbstractBinaryOperatorTest<Multi
         };
     }
 
+    @NonNull
     @Override
     protected Operator[] mustEvaluateAfter() {
         return new Operator[] {

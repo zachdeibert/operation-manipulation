@@ -8,7 +8,6 @@ import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
@@ -20,6 +19,7 @@ import com.github.zachdeibert.operationmanipulation.controller.EquationGenerator
 import com.github.zachdeibert.operationmanipulation.model.Equation;
 import com.github.zachdeibert.operationmanipulation.model.GameSession;
 import com.github.zachdeibert.operationmanipulation.model.Level;
+import com.github.zachdeibert.operationmanipulation.util.Log;
 import com.github.zachdeibert.operationmanipulation.view.views.AddEquationView;
 import com.github.zachdeibert.operationmanipulation.view.views.EquationContainer;
 import com.github.zachdeibert.operationmanipulation.view.views.EquationListLayout;

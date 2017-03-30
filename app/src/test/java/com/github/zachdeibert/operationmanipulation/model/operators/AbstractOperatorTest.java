@@ -3,6 +3,7 @@ package com.github.zachdeibert.operationmanipulation.model.operators;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import com.github.zachdeibert.operationmanipulation.AbstractUnitTest;
 import com.github.zachdeibert.operationmanipulation.model.Operator;
 
 import junit.framework.Assert;
@@ -11,14 +12,16 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-abstract class AbstractOperatorTest<T extends Operator> {
+abstract class AbstractOperatorTest<T extends Operator> extends AbstractUnitTest {
     @Nullable
     private T instance;
     @Nullable
     private T secondary;
 
+    @NonNull
     protected abstract T create();
 
+    @NonNull
     protected abstract double[][] getTestCases();
 
     protected abstract Operator[] mustEvaluateBefore();

@@ -6,11 +6,13 @@ import com.github.zachdeibert.operationmanipulation.model.Operator;
 import com.github.zachdeibert.operationmanipulation.model.Operators;
 
 public class SubtractionOperatorTest extends AbstractBinaryOperatorTest<SubtractionOperator> {
+    @NonNull
     @Override
     protected Operator[] mustEvaluateBefore() {
         return new Operator[0];
     }
 
+    @NonNull
     @Override
     protected Operator[] mustEvaluateAfter() {
         return new Operator[] {

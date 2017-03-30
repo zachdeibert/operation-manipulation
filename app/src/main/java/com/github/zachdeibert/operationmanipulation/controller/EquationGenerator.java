@@ -1,7 +1,6 @@
 package com.github.zachdeibert.operationmanipulation.controller;
 
 import android.support.annotation.NonNull;
-import android.util.Log;
 import android.util.SparseArray;
 
 import com.github.zachdeibert.operationmanipulation.model.BinaryOperator;
@@ -13,6 +12,7 @@ import com.github.zachdeibert.operationmanipulation.model.Operand;
 import com.github.zachdeibert.operationmanipulation.model.OperatorType;
 import com.github.zachdeibert.operationmanipulation.model.Operators;
 import com.github.zachdeibert.operationmanipulation.model.UnaryOperator;
+import com.github.zachdeibert.operationmanipulation.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;

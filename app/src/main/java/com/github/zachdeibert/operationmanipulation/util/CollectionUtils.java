@@ -1,7 +1,6 @@
 package com.github.zachdeibert.operationmanipulation.util;
 
 import android.support.annotation.NonNull;
-import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.HashMap;

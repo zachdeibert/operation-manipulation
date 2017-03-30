@@ -8,6 +8,7 @@ import com.github.zachdeibert.operationmanipulation.model.Operators;
 import com.github.zachdeibert.operationmanipulation.model.Side;
 
 public class CeilingOperatorTest extends AbstractGroupingOperatorTest<CeilingOperator> {
+    @NonNull
     @Override
     protected Operator[] mustEvaluateBefore() {
         return new Operator[] {
@@ -19,6 +20,7 @@ public class CeilingOperatorTest extends AbstractGroupingOperatorTest<CeilingOpe
         };
     }
 
+    @NonNull
     @Override
     protected Operator[] mustEvaluateAfter() {
         return new Operator[0];

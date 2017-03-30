@@ -8,6 +8,7 @@ import com.github.zachdeibert.operationmanipulation.model.Operators;
 import com.github.zachdeibert.operationmanipulation.model.Side;
 
 public class FloorOperatorTest extends AbstractGroupingOperatorTest<FloorOperator> {
+    @NonNull
     @Override
     protected Operator[] mustEvaluateBefore() {
         return new Operator[] {
@@ -19,6 +20,7 @@ public class FloorOperatorTest extends AbstractGroupingOperatorTest<FloorOperato
         };
     }
 
+    @NonNull
     @Override
     protected Operator[] mustEvaluateAfter() {
         return new Operator[0];

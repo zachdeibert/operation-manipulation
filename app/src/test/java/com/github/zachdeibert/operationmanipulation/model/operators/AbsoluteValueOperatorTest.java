@@ -7,6 +7,7 @@ import com.github.zachdeibert.operationmanipulation.model.Operator;
 import com.github.zachdeibert.operationmanipulation.model.Operators;
 
 public class AbsoluteValueOperatorTest extends AbstractGroupingOperatorTest<AbsoluteValueOperator> {
+    @NonNull
     @Override
     protected Operator[] mustEvaluateBefore() {
         return new Operator[] {
@@ -18,6 +19,7 @@ public class AbsoluteValueOperatorTest extends AbstractGroupingOperatorTest<Abso
         };
     }
 
+    @NonNull
     @Override
     protected Operator[] mustEvaluateAfter() {
         return new Operator[0];

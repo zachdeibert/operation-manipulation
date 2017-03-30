@@ -2,7 +2,6 @@ package com.github.zachdeibert.operationmanipulation.util;
 
 import android.content.ClipData;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import android.view.View;
 
 import java.lang.reflect.InvocationTargetException;

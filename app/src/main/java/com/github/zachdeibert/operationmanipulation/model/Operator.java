@@ -2,7 +2,8 @@ package com.github.zachdeibert.operationmanipulation.model;
 
 import android.os.Parcel;
 import android.support.annotation.NonNull;
-import android.util.Log;
+
+import com.github.zachdeibert.operationmanipulation.util.Log;
 
 public abstract class Operator extends ExpressionItem implements Cloneable {
     private final int order;

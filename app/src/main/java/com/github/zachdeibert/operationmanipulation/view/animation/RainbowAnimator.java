@@ -5,8 +5,9 @@ import android.animation.TimeInterpolator;
 import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import android.view.View;
+
+import com.github.zachdeibert.operationmanipulation.util.Log;
 
 import java.lang.ref.WeakReference;
 

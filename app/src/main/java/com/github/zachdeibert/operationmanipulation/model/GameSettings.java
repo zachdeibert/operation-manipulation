@@ -5,7 +5,8 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.util.Base64;
-import android.util.Log;
+
+import com.github.zachdeibert.operationmanipulation.util.Log;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;

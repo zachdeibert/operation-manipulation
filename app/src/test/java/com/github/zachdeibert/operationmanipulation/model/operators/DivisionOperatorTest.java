@@ -6,6 +6,7 @@ import com.github.zachdeibert.operationmanipulation.model.Operator;
 import com.github.zachdeibert.operationmanipulation.model.Operators;
 
 public class DivisionOperatorTest extends AbstractBinaryOperatorTest<DivisionOperator> {
+    @NonNull
     @Override
     protected Operator[] mustEvaluateBefore() {
         return new Operator[] {
@@ -14,6 +15,7 @@ public class DivisionOperatorTest extends AbstractBinaryOperatorTest<DivisionOpe
         };
     }
 
+    @NonNull
     @Override
     protected Operator[] mustEvaluateAfter() {
         return new Operator[] {

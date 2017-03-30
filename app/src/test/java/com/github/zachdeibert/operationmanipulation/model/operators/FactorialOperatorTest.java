@@ -8,6 +8,7 @@ import com.github.zachdeibert.operationmanipulation.model.Operators;
 import org.apache.commons.math3.special.Gamma;
 
 public class FactorialOperatorTest extends AbstractUnaryOperatorTest<FactorialOperator> {
+    @NonNull
     @Override
     protected Operator[] mustEvaluateBefore() {
         return new Operator[] {
@@ -19,6 +20,7 @@ public class FactorialOperatorTest extends AbstractUnaryOperatorTest<FactorialOp
         };
     }
 
+    @NonNull
     @Override
     protected Operator[] mustEvaluateAfter() {
         return new Operator[] {

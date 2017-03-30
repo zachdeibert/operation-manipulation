@@ -1,7 +1,8 @@
 package com.github.zachdeibert.operationmanipulation.model;
 
 import android.support.annotation.NonNull;
-import android.util.Log;
+
+import com.github.zachdeibert.operationmanipulation.util.Log;
 
 public enum OperatorType {
     ADDITION(Operators.ADDITION, 1),

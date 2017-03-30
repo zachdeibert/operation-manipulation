@@ -1,9 +1,9 @@
 package com.github.zachdeibert.operationmanipulation.controller;
 
+import com.github.zachdeibert.operationmanipulation.AbstractUnitTest;
 import com.github.zachdeibert.operationmanipulation.model.Equation;
 import com.github.zachdeibert.operationmanipulation.model.ExpressionItem;
 import com.github.zachdeibert.operationmanipulation.model.Operand;
-import com.github.zachdeibert.operationmanipulation.model.Operators;
 
 import junit.framework.Assert;
 
@@ -15,7 +15,21 @@ import java.util.HashSet;
 import java.util.Locale;
 import java.util.Set;
 
-public class EquationSolverTest extends Operators {
+import static com.github.zachdeibert.operationmanipulation.model.Operators.ABSOLUTE_VALUE;
+import static com.github.zachdeibert.operationmanipulation.model.Operators.ADDITION;
+import static com.github.zachdeibert.operationmanipulation.model.Operators.DIVISION;
+import static com.github.zachdeibert.operationmanipulation.model.Operators.EXPONENT;
+import static com.github.zachdeibert.operationmanipulation.model.Operators.FACTORIAL;
+import static com.github.zachdeibert.operationmanipulation.model.Operators.LEFT_CEILING;
+import static com.github.zachdeibert.operationmanipulation.model.Operators.LEFT_FLOOR;
+import static com.github.zachdeibert.operationmanipulation.model.Operators.LEFT_PARENTHESIS;
+import static com.github.zachdeibert.operationmanipulation.model.Operators.MULTIPLICATION;
+import static com.github.zachdeibert.operationmanipulation.model.Operators.RIGHT_CEILING;
+import static com.github.zachdeibert.operationmanipulation.model.Operators.RIGHT_FLOOR;
+import static com.github.zachdeibert.operationmanipulation.model.Operators.RIGHT_PARENTHESIS;
+import static com.github.zachdeibert.operationmanipulation.model.Operators.SUBTRACTION;
+
+public class EquationSolverTest extends AbstractUnitTest {
     private static final Operand OPERAND = new Operand(0);
     private static final ExpressionItem[][] IS_COMPLETE_TESTS = new ExpressionItem[][] {
             new ExpressionItem[] { OPERAND, ADDITION, OPERAND },
