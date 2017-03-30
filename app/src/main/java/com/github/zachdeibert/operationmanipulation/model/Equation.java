@@ -44,6 +44,17 @@ public class Equation implements Parcelable, Serializable {
         operandCount = ops.length;
     }
 
+    private void setLeftSide(@NonNull ExpressionItem... items) {
+        operandCount = 0;
+        lhs.clear();
+        for (ExpressionItem item : items) {
+            if (item instanceof Operand) {
+                ++operandCount;
+            }
+            lhs.add(item);
+        }
+    }
+
     public Operand getRightSide() {
         return rhs;
     }
@@ -124,6 +135,12 @@ public class Equation implements Parcelable, Serializable {
         setLevel(level);
         setLeftSide(lhs);
         setRightSide(rhs);
+    }
+
+    public Equation(Operand rhs, ExpressionItem... lhs) {
+        this();
+        setRightSide(rhs);
+        setLeftSide(lhs);
     }
 
     private Equation(@NonNull Parcel parcel) {

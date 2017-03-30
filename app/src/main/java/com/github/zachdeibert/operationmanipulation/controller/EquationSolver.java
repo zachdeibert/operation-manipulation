@@ -102,7 +102,7 @@ public class EquationSolver {
         }
     }
 
-    private static double solve(@NonNull ExpressionItem... expression) {
+    static double solve(@NonNull ExpressionItem... expression) {
         int maxOrder = 0;
         List<Object> expr = new LinkedList<>();
         for (ExpressionItem item : expression) {

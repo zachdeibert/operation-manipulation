@@ -29,7 +29,7 @@ public class ExponentOperator extends BinaryOperator {
 
     @Override
     public double run(double lhs, double rhs) {
-        return Math.pow(lhs, rhs);
+        return lhs == 0 && rhs == 0 ? Double.NaN : Math.pow(lhs, rhs);
     }
 
     public ExponentOperator() {
