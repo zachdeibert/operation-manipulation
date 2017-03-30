@@ -23,12 +23,16 @@ abstract class AbstractSidedOperatorTest<T extends GroupingOperator> {
         Parcel parcel = Parcel.obtain();
         T op = create(Side.Left);
         op.writeToParcel(parcel, 0);
+        parcel.setDataPosition(0);
         T op2 = getCreator().createFromParcel(parcel);
         Assert.assertNotSame("Serialized/deserialized objects should not be the same", op, op2);
         Assert.assertEquals("Serialization fail", op.toString(), op2.toString());
         op = create(Side.Right);
+        parcel.setDataPosition(0);
         op.writeToParcel(parcel, 0);
+        parcel.setDataPosition(0);
         op2 = getCreator().createFromParcel(parcel);
+        parcel.recycle();
         Assert.assertNotSame("Serialized/deserialized objects should not be the same", op, op2);
         Assert.assertEquals("Serialization fail", op.toString(), op2.toString());
     }
