@@ -21,6 +21,10 @@ abstract class AbstractOperatorTest<T extends Operator> {
 
     protected abstract double[][] getTestCases();
 
+    protected abstract Operator[] mustEvaluateBefore();
+
+    protected abstract Operator[] mustEvaluateAfter();
+
     @NonNull
     T getInstance() {
         Assert.assertNotNull("Before function not called", instance);
@@ -61,5 +65,11 @@ abstract class AbstractOperatorTest<T extends Operator> {
         Assert.assertNotNull("Before function not called", secondary);
         Assert.assertEquals("getOrder must be a constant", instance.getOrder(), secondary.getOrder());
         Assert.assertTrue("getOrder must return a non-negative integer", instance.getOrder() >= 0);
+        for (Operator op : mustEvaluateBefore()) {
+            Assert.assertTrue(String.format("%s is expected to run before %s", instance, op), instance.getOrder() > op.getOrder());
+        }
+        for (Operator op : mustEvaluateAfter()) {
+            Assert.assertTrue(String.format("%s is expected to run after %s", instance, op), instance.getOrder() < op.getOrder());
+        }
     }
 }

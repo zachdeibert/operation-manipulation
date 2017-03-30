@@ -2,9 +2,36 @@ package com.github.zachdeibert.operationmanipulation.model.operators;
 
 import android.support.annotation.NonNull;
 
+import com.github.zachdeibert.operationmanipulation.model.Operator;
+import com.github.zachdeibert.operationmanipulation.model.Operators;
+
 import org.apache.commons.math3.special.Gamma;
 
 public class FactorialOperatorTest extends AbstractUnaryOperatorTest<FactorialOperator> {
+    @Override
+    protected Operator[] mustEvaluateBefore() {
+        return new Operator[] {
+                Operators.ADDITION,
+                Operators.DIVISION,
+                Operators.EXPONENT,
+                Operators.MULTIPLICATION,
+                Operators.SUBTRACTION
+        };
+    }
+
+    @Override
+    protected Operator[] mustEvaluateAfter() {
+        return new Operator[] {
+                Operators.ABSOLUTE_VALUE,
+                Operators.LEFT_CEILING,
+                Operators.LEFT_FLOOR,
+                Operators.LEFT_PARENTHESIS,
+                Operators.RIGHT_CEILING,
+                Operators.RIGHT_FLOOR,
+                Operators.RIGHT_PARENTHESIS
+        };
+    }
+
     @NonNull
     @Override
     protected FactorialOperator create() {

@@ -3,9 +3,27 @@ package com.github.zachdeibert.operationmanipulation.model.operators;
 import android.support.annotation.NonNull;
 
 import com.github.zachdeibert.operationmanipulation.model.GroupingOperator;
+import com.github.zachdeibert.operationmanipulation.model.Operator;
+import com.github.zachdeibert.operationmanipulation.model.Operators;
 import com.github.zachdeibert.operationmanipulation.model.Side;
 
 public class ParenthesisOperatorTest extends AbstractGroupingOperatorTest<ParenthesisOperator> {
+    @Override
+    protected Operator[] mustEvaluateBefore() {
+        return new Operator[] {
+                Operators.ADDITION,
+                Operators.DIVISION,
+                Operators.FACTORIAL,
+                Operators.MULTIPLICATION,
+                Operators.SUBTRACTION
+        };
+    }
+
+    @Override
+    protected Operator[] mustEvaluateAfter() {
+        return new Operator[0];
+    }
+
     @NonNull
     @Override
     protected ParenthesisOperator create() {
