@@ -77,7 +77,7 @@ public class EquationSolverTest extends AbstractUnitTest {
     };
 
     @Test
-    public void solve() throws Exception {
+    public void solve() {
         Assert.assertEquals("Testing arrays are bad", SOLVE_TESTS.length, SOLVE_ANSWERS.length);
         for (int i = 0; i < SOLVE_TESTS.length; ++i) {
             Assert.assertEquals(String.format(Locale.US, "%s = %f", Arrays.deepToString(SOLVE_TESTS[i]), SOLVE_ANSWERS[i]), SOLVE_ANSWERS[i], EquationSolver.solve(SOLVE_TESTS[i]));
@@ -85,7 +85,7 @@ public class EquationSolverTest extends AbstractUnitTest {
     }
 
     @Test
-    public void isComplete() throws Exception {
+    public void isComplete() {
         Set<Integer> actuallyComplete = new HashSet<>();
         for (ExpressionItem[] expr : ACTUALLY_COMPLETE) {
             actuallyComplete.add(Arrays.deepHashCode(expr));
@@ -106,7 +106,7 @@ public class EquationSolverTest extends AbstractUnitTest {
     }
 
     @Test
-    public void isCorrect() throws Exception {
+    public void isCorrect() {
         Equation eq = new Equation(new Operand(4), new Operand(2), ADDITION, new Operand(2));
         Assert.assertTrue(eq.toString(), EquationSolver.isCorrect(eq));
         eq = new Equation(new Operand(5), new Operand(2), ADDITION, new Operand(2));

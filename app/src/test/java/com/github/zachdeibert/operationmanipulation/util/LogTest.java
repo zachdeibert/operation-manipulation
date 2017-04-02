@@ -13,6 +13,7 @@ import org.junit.Test;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
+import java.util.Objects;
 
 public class LogTest extends AbstractUnitTest {
     private interface NormalTester {
@@ -33,13 +34,13 @@ public class LogTest extends AbstractUnitTest {
     private PrintStream stdErr;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         stdOut = System.out;
         stdErr = System.err;
     }
 
     @After
-    public void tearDown() throws Exception {
+    public void tearDown() {
         System.setOut(stdOut);
         stdOut = null;
         System.setErr(stdErr);
@@ -50,7 +51,7 @@ public class LogTest extends AbstractUnitTest {
         Log.LOGCAT = false;
         for (String tag : STRINGS) {
             for (String msg : STRINGS) {
-                if (tag != msg) {
+                if (!Objects.equals(tag, msg)) {
                     ByteArrayOutputStream out = new ByteArrayOutputStream();
                     ByteArrayOutputStream err = new ByteArrayOutputStream();
                     System.setOut(new PrintStream(out));
@@ -72,7 +73,7 @@ public class LogTest extends AbstractUnitTest {
         Log.LOGCAT = true;
         for (String tag : STRINGS) {
             for (String msg : STRINGS) {
-                if (tag != msg) {
+                if (!Objects.equals(tag, msg)) {
                     RuntimeException ex = null;
                     try {
                         method.run(tag, msg);
@@ -91,7 +92,7 @@ public class LogTest extends AbstractUnitTest {
         Log.LOGCAT = false;
         for (String tag : STRINGS) {
             for (String msg : STRINGS) {
-                if (tag != msg) {
+                if (!Objects.equals(tag, msg)) {
                     ByteArrayOutputStream out = new ByteArrayOutputStream();
                     ByteArrayOutputStream err = new ByteArrayOutputStream();
                     System.setOut(new PrintStream(out));
@@ -121,7 +122,7 @@ public class LogTest extends AbstractUnitTest {
         Log.LOGCAT = true;
         for (String tag : STRINGS) {
             for (String msg : STRINGS) {
-                if (tag != msg) {
+                if (!Objects.equals(tag, msg)) {
                     RuntimeException ex = null;
                     try {
                         method.run(tag, msg, new Exception());

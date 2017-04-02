@@ -19,7 +19,7 @@ abstract class AbstractSidedOperatorTest<T extends GroupingOperator> {
     protected abstract Parcelable.Creator<T> getCreator();
 
     @Test
-    public void writeToParcel() throws Exception {
+    public void writeToParcel() {
         Parcel parcel = Parcel.obtain();
         T op = create(Side.Left);
         op.writeToParcel(parcel, 0);

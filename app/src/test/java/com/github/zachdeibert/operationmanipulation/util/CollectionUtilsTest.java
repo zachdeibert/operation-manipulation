@@ -13,7 +13,7 @@ import java.util.HashMap;
 public class CollectionUtilsTest extends AbstractUnitTest {
     @Test
     @SuppressWarnings("unchecked")
-    public void checkedAssignmentList() throws Exception {
+    public void checkedAssignmentList() {
         ArrayList list = new ArrayList();
         list.addAll(Arrays.asList("a", "b", "c", 1, 2, "d", 3, "f", 42, 0.9, "e", this));
         ArrayList<String> stringList = CollectionUtils.checkedAssignment(list, String.class);
@@ -36,7 +36,7 @@ public class CollectionUtilsTest extends AbstractUnitTest {
 
     @Test
     @SuppressWarnings("unchecked")
-    public void checkedAssignmentMap() throws Exception {
+    public void checkedAssignmentMap() {
         HashMap map = new HashMap();
         map.put("a", 1);
         map.put("b", 2);

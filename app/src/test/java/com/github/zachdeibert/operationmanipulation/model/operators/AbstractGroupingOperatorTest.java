@@ -21,17 +21,17 @@ abstract class AbstractGroupingOperatorTest<T extends GroupingOperator> extends 
     protected abstract GroupingOperator[] getRightSides();
 
     @Before
-    public void _setUp() throws Exception {
+    public void _setUp() {
         rightSides = getRightSides();
     }
 
     @After
-    public void _tearDown() throws Exception {
+    public void _tearDown() {
         rightSides = null;
     }
 
     @Test
-    public void getLevel() throws Exception {
+    public void getLevel() {
         Assert.assertTrue("Left side level must be non-negative", getInstance().getLevel() >= 0);
         Assert.assertNotNull("Before function not called", rightSides);
         for (GroupingOperator op : rightSides) {

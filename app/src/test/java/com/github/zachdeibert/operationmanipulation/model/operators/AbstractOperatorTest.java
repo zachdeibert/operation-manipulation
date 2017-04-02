@@ -37,24 +37,24 @@ abstract class AbstractOperatorTest<T extends Operator> extends AbstractUnitTest
     }
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         instance = create();
         secondary = create();
     }
 
     @After
-    public void tearDown() throws Exception {
+    public void tearDown() {
         instance = null;
         secondary = null;
     }
 
     @Test
-    public void _create() throws Exception {
+    public void _create() {
         Assert.assertNotSame("Unit test create() needs to return new instances", instance, secondary);
     }
 
     @Test
-    public void _toString() throws Exception {
+    public void _toString() {
         Assert.assertNotNull("Before function not called", instance);
         Assert.assertNotNull("Before function not called", secondary);
         Assert.assertEquals("toString must be a constant", instance.toString(), secondary.toString());
@@ -65,7 +65,7 @@ abstract class AbstractOperatorTest<T extends Operator> extends AbstractUnitTest
     public abstract void run() throws Exception;
 
     @Test
-    public void getOrder() throws Exception {
+    public void getOrder() {
         Assert.assertNotNull("Before function not called", instance);
         Assert.assertNotNull("Before function not called", secondary);
         Assert.assertEquals("getOrder must be a constant", instance.getOrder(), secondary.getOrder());
