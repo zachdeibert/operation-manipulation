@@ -19,7 +19,7 @@ public class Log {
             android.util.Log.d(tag, msg, tr);
         } else {
             System.out.printf("D/%s: %s\n", tag, msg);
-            tr.printStackTrace();
+            tr.printStackTrace(System.out);
         }
     }
 
