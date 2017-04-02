@@ -24,8 +24,10 @@ abstract class AbstractOperatorTest<T extends Operator> extends AbstractUnitTest
     @NonNull
     protected abstract double[][] getTestCases();
 
+    @NonNull
     protected abstract Operator[] mustEvaluateBefore();
 
+    @NonNull
     protected abstract Operator[] mustEvaluateAfter();
 
     @NonNull
