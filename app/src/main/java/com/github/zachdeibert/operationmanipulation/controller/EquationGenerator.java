@@ -202,6 +202,21 @@ public class EquationGenerator extends Thread {
         return eq == null ? generate() : eq;
     }
 
+    void generateCachedEquation() {
+        Equation eq = null;
+        try {
+            if (generatedEquations.size() < QUEUE_SIZE) {
+                eq = generate();
+            }
+            Thread.sleep(100);
+        } catch (InterruptedException ex) {
+            runThread = false;
+        }
+        if (eq != null) {
+            generatedEquations.offer(eq);
+        }
+    }
+
     @Override
     public void run() {
         runThread = true;
@@ -212,18 +227,7 @@ public class EquationGenerator extends Thread {
             }
         });
         while (runThread) {
-            Equation eq = null;
-            try {
-                if (generatedEquations.size() < QUEUE_SIZE) {
-                    eq = generate();
-                }
-                Thread.sleep(100);
-            } catch (InterruptedException ex) {
-                continue;
-            }
-            if (eq != null) {
-                generatedEquations.offer(eq);
-            }
+            generateCachedEquation();
         }
     }
 
