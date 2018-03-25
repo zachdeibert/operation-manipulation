@@ -39,7 +39,7 @@ export default class GameScreen extends React.Component {
                         )} style={{
                             "flex": 1
                         }} />
-                <ControlBox />
+                <ControlBox model={this.model} />
             </View>
         );
     }

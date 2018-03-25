@@ -1,6 +1,7 @@
 import React from "react";
 import { Text, View } from "react-native";
 import Operator from "./Operator";
+import Operators from "../../Model/Operators";
 
 export default class ControlBox extends React.Component {
     render() {
@@ -12,10 +13,9 @@ export default class ControlBox extends React.Component {
                 "justifyContent": "center",
                 "padding": 5
             }}>
-                <Operator symbol="+" />
-                <Operator symbol="-" />
-                <Operator symbol="x" />
-                <Operator symbol="/" />
+                {this.props.model.allowedOperators.map((op, i) => (
+                    <Operator key={`operator-${i}`} symbol={Operators[op].symbol} />
+                ))}
             </View>
         );
     }
