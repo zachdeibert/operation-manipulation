@@ -1,3 +1,4 @@
 <resources>
+    <string name="all_chars">abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 .,!?</string>
     <string name="app_name">Operation Missing</string>
 </resources>
