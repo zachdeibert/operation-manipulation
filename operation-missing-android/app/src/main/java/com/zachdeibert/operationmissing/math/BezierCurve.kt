@@ -6,6 +6,32 @@ import kotlin.math.sqrt
 class BezierCurve(points: Array<FloatArray>) {
     val points: Array<FloatArray> = points
 
+    override fun toString(): String {
+        val str = StringBuilder()
+        var firstPoint = true
+        str.append("BezierCurve {")
+        for (point in points) {
+            if (firstPoint) {
+                firstPoint = false
+            } else {
+                str.append(", ")
+            }
+            str.append("(")
+            var firstDim = true
+            for (dim in point) {
+                if (firstDim) {
+                    firstDim = false
+                } else {
+                    str.append(", ")
+                }
+                str.append(dim)
+            }
+            str.append(")")
+        }
+        str.append("}")
+        return str.toString()
+    }
+
     private fun interpolate(start: FloatArray, end: FloatArray, t: Float): FloatArray {
         if (t < 0 || t > 1) {
             throw IllegalArgumentException("t must be between 0 and 1")
@@ -24,19 +50,14 @@ class BezierCurve(points: Array<FloatArray>) {
         if (t < 0 || t > 1) {
             throw IllegalArgumentException("t must be between 0 and 1")
         }
-        when (points.size) {
-            0 -> return FloatArray(0)
-            1 -> return points[0]
-            else -> {
-                var p = points
-                while (p.size > 2) {
-                    p = Array<FloatArray>(p.size - 1) { i: Int ->
-                        return interpolate(p[i], p[i + 1], t)
-                    }
-                }
-                return interpolate(p[0], p[1], t)
-            }
+        if (points.size == 0) {
+            return FloatArray(0)
         }
+        var p = points
+        while (p.size > 1) {
+            p = Array<FloatArray>(p.size - 1) { i: Int -> interpolate(p[i], p[i + 1], t) }
+        }
+        return p[0]
     }
 
     fun controlDistance(): Float {

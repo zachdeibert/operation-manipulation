@@ -44,14 +44,6 @@ class TextShader(context: Context) : Shader(context, R.raw.text_vertex, R.raw.te
     fun uploadVerts(data: FloatBuffer) {
         data.position(0)
         GLES20.glVertexAttribPointer(aChar, 4, GLES20.GL_FLOAT, false, 4 * 4, data)
-        data.position(0)
-        while (data.remaining() > 0) {
-            val a = data.get()
-            val b = data.get()
-            val c = data.get()
-            val d = data.get()
-            Log.d("TextShader", String.format("(%f, %f, %f, %f)", a, b, c, d))
-        }
     }
 
     fun setColor(r: Float, g: Float, b: Float, a: Float) {

@@ -2,4 +2,9 @@
     <string name="all_chars">abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 .,!?</string>
     <string name="background_chars">0123456789+-×÷</string>
     <string name="app_name">Operation Missing</string>
+    <string name="mode_singleplayer">Singleplayer</string>
+    <string name="mode_multiplayer">Multiplayer</string>
+    <string name="mode_options">Options</string>
+    <string name="mode_credits">Credits</string>
+    <string name="mode_rate">Rate</string>
 </resources>

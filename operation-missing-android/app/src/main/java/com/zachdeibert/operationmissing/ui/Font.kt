@@ -5,13 +5,9 @@ import android.graphics.*
 import android.graphics.Color
 import android.opengl.GLES20
 import android.opengl.GLUtils
-import android.os.Build
-import android.util.Log
-import android.util.SizeF
 import com.zachdeibert.operationmissing.R
 import com.zachdeibert.operationmissing.ui.shaders.TextShader
 import com.zachdeibert.operationmissing.util.exportBitmap
-import java.nio.Buffer
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
 import kotlin.math.sqrt
@@ -42,20 +38,12 @@ class Font : Iterable<Glyph> {
 
     fun drawString(str: CharSequence, offset: Int, end: Int, startX: Float, startY: Float, endX: Float, endY: Float, mvp: FloatArray, r: Float, g: Float, b: Float, a: Float) {
         val bounds = measureString(str, offset, end, endX - startX, endY - startY)
-        Log.d("Font", String.format("Width = %f, height = %f", bounds[0], bounds[1]))
-        Log.v("Font", "shader.enable()")
         shader.enable()
-        Log.v("Font", "shader.setStart()")
         shader.setStart(startX, startY)
-        Log.v("Font", "shader.setEnd()")
         shader.setEnd(endX, endY)
-        Log.v("Font", "shader.setHeight()")
         shader.setHeight(0f, bounds[1]) // TODO Fix normal
-        Log.v("Font", "shader.setMVPMatrix()")
         shader.setMVPMatrix(mvp)
-        Log.v("Font", "shader.setColor()")
         shader.setColor(r, g, b, a)
-        Log.v("Font", "shader.setTexture()")
         shader.setTexture(texture)
         val data = ByteBuffer.allocateDirect(4 * 4 * 2 * (end - offset + 2)).order(ByteOrder.nativeOrder()).asFloatBuffer()
         var prev: Glyph? = null
@@ -85,11 +73,8 @@ class Font : Iterable<Glyph> {
             n = t
         }
         data.put(floatArrayOf(p, n, 1f, counter, p, n, 1f, counter + 1))
-        Log.v("Font", "shader.uploadVerts()")
         shader.uploadVerts(data)
-        Log.v("Font", "glDrawArrays()")
         GLES20.glDrawArrays(GLES20.GL_TRIANGLE_STRIP, 0, 2 * (end - offset + 2))
-        Log.v("Font", "return")
     }
 
     constructor(size: Float, shader: TextShader, context: Context) {
@@ -101,9 +86,9 @@ class Font : Iterable<Glyph> {
         var totalWidth = 0
         for (i in 0..dictionary.size-1) {
             val width = paint.measureText(dictionary, i, 1)
-            val newWidth = (totalWidth + width + 1f - Float.MIN_VALUE).toInt()
+            val newWidth = (totalWidth + width + 1f).toInt()
             glyphs[dictionary[i]] = Glyph(dictionary[i], totalWidth, newWidth)
-            totalWidth = newWidth
+            totalWidth = newWidth + 10
         }
         val metrics = paint.fontMetrics
         height = metrics.bottom - metrics.top

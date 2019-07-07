@@ -4,7 +4,7 @@ import android.content.Context
 import com.zachdeibert.operationmissing.R
 import com.zachdeibert.operationmissing.ui.Container
 
-const val NUM_BACKGROUND_SPRITES = 10
+const val NUM_BACKGROUND_SPRITES = 12
 const val BACKGROUND_SPRITE_ALPHA = 0.1f
 
 class Background : Container() {

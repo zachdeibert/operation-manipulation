@@ -64,8 +64,7 @@ class BackgroundSprite(text: String, colorId: Int, alpha: Float) : Component {
         }
         val startP = start.evaluate(t)
         val endP = end.evaluate(t)
-        renderer.text.default.drawString(text, 0, text.length - 1, startP[0], startP[1], endP[0], endP[1], ident4, r, g, b, a)
-        Log.d("BackgroundSprite", String.format("(%f, %f) -> (%f, %f)", startP[0], startP[1], endP[0], endP[1]))
+        renderer.text.default.drawString(text, 0, text.length - 1, startP[0], startP[1] - 0.5f, endP[0], endP[1] - 0.5f, ident4, r, g, b, a)
         if (t >= 1f) {
             start = projectNewPath(start)
             end = projectNewPath(end)
