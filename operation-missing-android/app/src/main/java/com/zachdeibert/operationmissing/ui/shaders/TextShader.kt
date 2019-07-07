@@ -54,8 +54,8 @@ class TextShader(context: Context) : Shader(context, R.raw.text_vertex, R.raw.te
         }
     }
 
-    fun setColor(r: Float, g: Float, b: Float) {
-        GLES20.glUniform3f(uColor, r, g, b)
+    fun setColor(r: Float, g: Float, b: Float, a: Float) {
+        GLES20.glUniform4f(uColor, r, g, b, a)
     }
 
     fun setTexture(id: Int) {

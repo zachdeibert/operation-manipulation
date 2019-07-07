@@ -40,7 +40,7 @@ class Font : Iterable<Glyph> {
         return floatArrayOf(width, height * mag / width)
     }
 
-    fun drawString(str: CharSequence, offset: Int, end: Int, startX: Float, startY: Float, endX: Float, endY: Float, mvp: FloatArray, r: Float, g: Float, b: Float) {
+    fun drawString(str: CharSequence, offset: Int, end: Int, startX: Float, startY: Float, endX: Float, endY: Float, mvp: FloatArray, r: Float, g: Float, b: Float, a: Float) {
         val bounds = measureString(str, offset, end, endX - startX, endY - startY)
         Log.d("Font", String.format("Width = %f, height = %f", bounds[0], bounds[1]))
         Log.v("Font", "shader.enable()")
@@ -54,7 +54,7 @@ class Font : Iterable<Glyph> {
         Log.v("Font", "shader.setMVPMatrix()")
         shader.setMVPMatrix(mvp)
         Log.v("Font", "shader.setColor()")
-        shader.setColor(r, g, b)
+        shader.setColor(r, g, b, a)
         Log.v("Font", "shader.setTexture()")
         shader.setTexture(texture)
         val data = ByteBuffer.allocateDirect(4 * 4 * 2 * (end - offset + 2)).order(ByteOrder.nativeOrder()).asFloatBuffer()

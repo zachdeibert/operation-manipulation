@@ -11,9 +11,8 @@ class Renderer(surface: GLSurfaceView) : GLSurfaceView.Renderer {
     var screen: Screen
         get() = _screen
         set(value) {
-            _screen.destroy(this)
             _screen = value
-            _screen.init(this)
+            _screen.init(surface.context)
         }
     var surface: GLSurfaceView = surface
     private lateinit var _text: TextRenderer
@@ -31,7 +30,7 @@ class Renderer(surface: GLSurfaceView) : GLSurfaceView.Renderer {
 
     override fun onSurfaceCreated(gl: GL10?, config: EGLConfig?) {
         _text = TextRenderer(surface.context)
-        screen.init(this)
+        screen.init(surface.context)
         var color = screen.clearColor
         GLES20.glClearColor(color.R, color.G, color.B, color.A)
         GLES20.glEnable(GLES20.GL_BLEND)

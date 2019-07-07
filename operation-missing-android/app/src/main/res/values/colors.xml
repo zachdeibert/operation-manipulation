@@ -1,4 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="menuBackground">#81D4FA</color>
+    <color name="backgroundPrimary">#80DEEA</color>
+    <color name="backgroundAccent1">#AA00FF</color>
+    <color name="backgroundAccent2">#6200EA</color>
+    <color name="backgroundAccent3">#00C853</color>
+    <color name="backgroundAccent4">#FF6D00</color>
+    <color name="foregroundPrimary">#222222</color>
 </resources>

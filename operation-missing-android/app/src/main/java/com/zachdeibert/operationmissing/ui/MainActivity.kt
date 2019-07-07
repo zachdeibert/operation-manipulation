@@ -16,7 +16,7 @@ class MainActivity : AppCompatActivity() {
         glView = GLSurfaceView(this)
         glView.setEGLContextClientVersion(2)
         glView.setRenderer(Renderer(glView))
-        glView.renderMode = GLSurfaceView.RENDERMODE_WHEN_DIRTY
+        //glView.renderMode = GLSurfaceView.RENDERMODE_WHEN_DIRTY
         setContentView(glView)
     }
 }
