@@ -5,12 +5,11 @@ import android.opengl.Matrix
 import android.view.MotionEvent
 import com.zachdeibert.operationmissing.ui.Component
 import com.zachdeibert.operationmissing.ui.Renderer
-import kotlin.math.ceil
-import kotlin.math.floor
-import kotlin.math.round
-import kotlin.math.sign
+import kotlin.math.*
 
 const val SLIDING_RESTORE_SPEED_PER_MILLI = 0.004f
+const val SLIDING_SWIPE_TIME_MAX_MILLIS: Long = 400
+const val SLIDING_SWIPE_DIST_MIN = 0.15f
 
 open class SlidingMenu(background: Component?, foreground: Component?, pages: Array<Component>) : Component {
     private val background = background
@@ -21,6 +20,8 @@ open class SlidingMenu(background: Component?, foreground: Component?, pages: Ar
     private var startScroll: Float? = null
     private var lastX: Float = 0f
     private var lastRender: Long = 0
+    private var swipeTime: Long = 0
+    private var target: Float = 0f
 
     override fun init(context: Context) {
         foreground?.init(context)
@@ -49,7 +50,6 @@ open class SlidingMenu(background: Component?, foreground: Component?, pages: Ar
         } else {
             var render = true
             if (startScroll == null) {
-                val target = round(scroll)
                 val dir = sign(target - scroll)
                 scroll += dir * SLIDING_RESTORE_SPEED_PER_MILLI * (renderTime - lastRender)
                 if (sign(target - scroll) != dir) {
@@ -76,10 +76,18 @@ open class SlidingMenu(background: Component?, foreground: Component?, pages: Ar
             MotionEvent.ACTION_DOWN -> {
                 startScroll = scroll
                 lastX = event.x
+                swipeTime = System.currentTimeMillis()
             }
             MotionEvent.ACTION_UP -> {
+                val startScroll = startScroll
                 if (startScroll != null) {
-                    startScroll = null
+                    val dx = abs(startScroll - scroll)
+                    if (dx < 0.5f && dx > SLIDING_SWIPE_DIST_MIN && System.currentTimeMillis() - swipeTime < SLIDING_SWIPE_TIME_MAX_MILLIS) {
+                        target = round(scroll + 0.5f * sign(scroll - startScroll))
+                    } else {
+                        target = round(scroll)
+                    }
+                    this.startScroll = null
                 }
             }
             MotionEvent.ACTION_MOVE -> {
