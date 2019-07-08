@@ -1,6 +1,7 @@
 package com.zachdeibert.operationmissing.ui
 
 import android.content.Context
+import android.view.MotionEvent
 
 open class Container : Component {
     val children = mutableListOf<Component>()
@@ -17,9 +18,15 @@ open class Container : Component {
         }
     }
 
-    override fun render(renderer: Renderer) {
+    override fun render(renderer: Renderer, mvp: FloatArray) {
         for (child in children) {
-            child.render(renderer)
+            child.render(renderer, mvp)
+        }
+    }
+
+    override fun onTouchEvent(event: MotionEvent) {
+        for (child in children) {
+            child.onTouchEvent(event)
         }
     }
 }

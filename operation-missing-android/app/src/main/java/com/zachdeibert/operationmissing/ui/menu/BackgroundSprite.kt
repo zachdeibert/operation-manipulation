@@ -3,6 +3,7 @@ package com.zachdeibert.operationmissing.ui.menu
 import android.content.Context
 import android.graphics.Color
 import android.util.Log
+import android.view.MotionEvent
 import com.zachdeibert.operationmissing.math.BezierCurve
 import com.zachdeibert.operationmissing.math.Vector
 import com.zachdeibert.operationmissing.ui.Component
@@ -12,10 +13,6 @@ import kotlin.random.Random
 const val MILLIS_PER_CONTROL_UNIT: Long = 10000
 
 val random = Random(System.currentTimeMillis())
-val ident4 = floatArrayOf(1f, 0f, 0f, 0f,
-                          0f, 1f, 0f, 0f,
-                          0f, 0f, 1f, 0f,
-                          0f, 0f, 0f, 1f)
 
 class BackgroundSprite(text: String, colorId: Int, alpha: Float) : Component {
     private val text: String = text
@@ -50,6 +47,9 @@ class BackgroundSprite(text: String, colorId: Int, alpha: Float) : Component {
     override fun onResize(renderer: Renderer, width: Int, height: Int) {
     }
 
+    override fun onTouchEvent(event: MotionEvent) {
+    }
+
     override fun init(context: Context) {
         val color = context.resources.getColor(colorId)
         r = Color.red(color) / 255f
@@ -57,14 +57,14 @@ class BackgroundSprite(text: String, colorId: Int, alpha: Float) : Component {
         b = Color.blue(color) / 255f
     }
 
-    override fun render(renderer: Renderer) {
+    override fun render(renderer: Renderer, mvp: FloatArray) {
         var t: Float = (System.currentTimeMillis() - startTime).toFloat() / (endTime - startTime).toFloat()
         if (t > 1) {
             t = 1f
         }
         val startP = start.evaluate(t)
         val endP = end.evaluate(t)
-        renderer.text.default.drawString(text, 0, text.length - 1, startP[0], startP[1] - 0.5f, endP[0], endP[1] - 0.5f, ident4, r, g, b, a)
+        renderer.text.default.drawString(text, 0, text.length - 1, startP[0], startP[1] - 0.5f, endP[0], endP[1] - 0.5f, mvp, r, g, b, a)
         if (t >= 1f) {
             start = projectNewPath(start)
             end = projectNewPath(end)
