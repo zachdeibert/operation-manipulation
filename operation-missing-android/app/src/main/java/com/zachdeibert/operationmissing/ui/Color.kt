@@ -5,10 +5,10 @@ import android.graphics.Color
 import android.support.v4.content.res.ResourcesCompat
 
 class Color {
-    val R: Float
-    val G: Float
-    val B: Float
-    val A: Float
+    var R: Float
+    var G: Float
+    var B: Float
+    var A: Float
 
     constructor(r: Float, g: Float, b: Float, a: Float = 1f) {
         R = r

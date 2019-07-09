@@ -2,7 +2,6 @@ package com.zachdeibert.operationmissing.ui
 
 import android.content.Context
 import android.graphics.*
-import android.graphics.Color
 import android.opengl.GLES20
 import android.opengl.GLUtils
 import com.zachdeibert.operationmissing.R
@@ -36,14 +35,14 @@ class Font : Iterable<Glyph> {
         return floatArrayOf(width, height * mag / width)
     }
 
-    fun drawString(str: CharSequence, offset: Int, end: Int, startX: Float, startY: Float, endX: Float, endY: Float, mvp: FloatArray, r: Float, g: Float, b: Float, a: Float) {
+    fun drawString(str: CharSequence, offset: Int, end: Int, startX: Float, startY: Float, endX: Float, endY: Float, mvp: FloatArray, color: Color) {
         val bounds = measureString(str, offset, end, endX - startX, endY - startY)
         shader.enable()
         shader.setStart(startX, startY)
         shader.setEnd(endX, endY)
         shader.setHeight(0f, bounds[1]) // TODO Fix normal
         shader.setMVPMatrix(mvp)
-        shader.setColor(r, g, b, a)
+        shader.setColor(color.R, color.G, color.B, color.A)
         shader.setTexture(texture)
         val data = ByteBuffer.allocateDirect(4 * 4 * 2 * (end - offset + 2)).order(ByteOrder.nativeOrder()).asFloatBuffer()
         var prev: Glyph? = null
@@ -93,7 +92,7 @@ class Font : Iterable<Glyph> {
         val metrics = paint.fontMetrics
         height = metrics.bottom - metrics.top
         val bmp = Bitmap.createBitmap(totalWidth, (height + 1f - Float.MIN_VALUE).toInt(), Bitmap.Config.ARGB_8888)
-        bmp.eraseColor(Color.WHITE)
+        bmp.eraseColor(android.graphics.Color.WHITE)
         val canvas = Canvas(bmp)
         for (i in 0..dictionary.size-1) {
             val glyph = glyphs[dictionary[i]]

@@ -24,5 +24,6 @@ class Background : Container() {
         for (i in 1..NUM_BACKGROUND_SPRITES) {
             children.add(BackgroundSprite(String(charArrayOf(chars[random.nextInt(chars.length)])), colors[random.nextInt(colors.size)], BACKGROUND_SPRITE_ALPHA))
         }
+        super.init(context)
     }
 }

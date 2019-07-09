@@ -1,11 +1,11 @@
 package com.zachdeibert.operationmissing.ui.menu
 
 import android.content.Context
-import android.graphics.Color
 import android.util.Log
 import android.view.MotionEvent
 import com.zachdeibert.operationmissing.math.BezierCurve
 import com.zachdeibert.operationmissing.math.Vector
+import com.zachdeibert.operationmissing.ui.Color
 import com.zachdeibert.operationmissing.ui.Component
 import com.zachdeibert.operationmissing.ui.Renderer
 import kotlin.random.Random
@@ -21,10 +21,8 @@ class BackgroundSprite(text: String, colorId: Int, alpha: Float) : Component {
     private var end: BezierCurve
     private var startTime: Long = 0
     private var endTime: Long = 0
-    private var r: Float = 0f
-    private var g: Float = 0f
-    private var b: Float = 0f
-    private val a: Float = alpha
+    private val alpha = alpha
+    private lateinit var color: Color
 
     private fun random(): Float = random.nextFloat() * 2f - 1f
 
@@ -51,10 +49,8 @@ class BackgroundSprite(text: String, colorId: Int, alpha: Float) : Component {
     }
 
     override fun init(context: Context) {
-        val color = context.resources.getColor(colorId)
-        r = Color.red(color) / 255f
-        g = Color.green(color) / 255f
-        b = Color.blue(color) / 255f
+        color = Color(context, colorId)
+        color.A = alpha
     }
 
     override fun render(renderer: Renderer, mvp: FloatArray) {
@@ -64,7 +60,7 @@ class BackgroundSprite(text: String, colorId: Int, alpha: Float) : Component {
         }
         val startP = start.evaluate(t)
         val endP = end.evaluate(t)
-        renderer.text.default.drawString(text, 0, text.length - 1, startP[0], startP[1] - 0.5f, endP[0], endP[1] - 0.5f, mvp, r, g, b, a)
+        renderer.text.default.drawString(text, 0, text.length - 1, startP[0], startP[1] - 0.5f, endP[0], endP[1] - 0.5f, mvp, color)
         if (t >= 1f) {
             start = projectNewPath(start)
             end = projectNewPath(end)
